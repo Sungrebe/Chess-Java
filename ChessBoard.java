@@ -26,13 +26,11 @@ public class ChessBoard extends JFrame {
         JPanel whiteInfoPanel = new JPanel();
         whiteInfoPanel.setLayout(new BoxLayout(whiteInfoPanel, BoxLayout.Y_AXIS));
         whiteInfoPanel.add(new JLabel("White"));
-        whiteInfoPanel.add(Box.createVerticalGlue());
         whiteInfoPanel.add(new JLabel("Time Elapsed - 00:00 minutes"));
 
         JPanel blackInfoPanel = new JPanel();
         blackInfoPanel.setLayout(new BoxLayout(blackInfoPanel, BoxLayout.Y_AXIS));
         blackInfoPanel.add(new JLabel("Black"));
-        blackInfoPanel.add(Box.createVerticalGlue());
         blackInfoPanel.add(new JLabel("Time Elapsed - 00:00 minutes"));
 
         infoPanel.add(whiteInfoPanel);
