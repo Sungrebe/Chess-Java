@@ -16,6 +16,15 @@ public class BoardSpace extends JComponent {
         setBorder(new LineBorder(Color.BLACK));
     }
 
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        /*
+         * Paint the image of the chess piece onto the board space
+         * To be implemented
+         */
+    }
+
     public int getRow() {
         return row;
     }
@@ -35,5 +44,5 @@ public class BoardSpace extends JComponent {
     public void removePiece() {
         cp = null;
     }
-    
+
 }
