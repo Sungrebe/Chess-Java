@@ -1,6 +1,4 @@
-import javax.swing.*;
-
-public class ChessPiece extends JComponent {
+public class ChessPiece {
 
     private String type;
 
