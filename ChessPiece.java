@@ -20,8 +20,9 @@ public class ChessPiece extends JComponent {
         // code goes here
     }
 
-    public void showAvailableMoves() {
+    public BoardSpace[] getMoves() {
         // code goes here
+        return null;
     }
 
 }

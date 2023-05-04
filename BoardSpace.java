@@ -3,6 +3,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 public class BoardSpace extends JComponent {
+
     private int row;
     private int col;
     private ChessPiece cp;
@@ -34,4 +35,5 @@ public class BoardSpace extends JComponent {
     public void removePiece() {
         cp = null;
     }
+    
 }
