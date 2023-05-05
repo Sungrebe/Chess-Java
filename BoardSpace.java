@@ -6,12 +6,10 @@ public class BoardSpace extends JComponent {
 
     private int row;
     private int col;
-    private ChessPiece cp;
 
-    public BoardSpace(int row, int col, ChessPiece cp) {
+    public BoardSpace(int row, int col) {
         this.row = row;
         this.col = col;
-        this.cp = cp;
 
         setBorder(new LineBorder(Color.BLACK));
     }
@@ -19,10 +17,25 @@ public class BoardSpace extends JComponent {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        /*
-         * Paint the image of the chess piece onto the board space
-         * To be implemented
-         */
+        Graphics2D g2 = (Graphics2D) g;
+
+        Dimension size = getSize();
+
+        if (row % 2 == 0) {
+            if (col % 2 == 0) {
+                g2.setColor(new Color(255, 183, 123, 100));
+            } else {
+                g2.setColor(new Color(102, 73, 44, 100));
+            }
+        } else {
+            if (col % 2 == 0) {
+                g2.setColor(new Color(102, 73, 44, 100));
+            } else {
+                g2.setColor(new Color(255, 183, 123, 100));
+            }
+        }
+
+        g2.fillRect(0, 0, size.width, size.height);
     }
 
     public int getRow() {
@@ -31,18 +44,6 @@ public class BoardSpace extends JComponent {
 
     public int getCol() {
         return col;
-    }
-
-    public ChessPiece getPiece() {
-        return cp;
-    }
-
-    public void setPiece(ChessPiece other) {
-        cp = other;
-    }
-
-    public void removePiece() {
-        cp = null;
     }
 
 }
