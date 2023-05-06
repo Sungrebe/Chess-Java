@@ -17,25 +17,23 @@ public class BoardSpace extends JComponent {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        Graphics2D g2 = (Graphics2D) g;
-
         Dimension size = getSize();
 
         if (row % 2 == 0) {
             if (col % 2 == 0) {
-                g2.setColor(new Color(255, 183, 123, 100));
+                g.setColor(new Color(255, 183, 123, 100));
             } else {
-                g2.setColor(new Color(102, 73, 44, 100));
+                g.setColor(new Color(102, 73, 44, 100));
             }
         } else {
             if (col % 2 == 0) {
-                g2.setColor(new Color(102, 73, 44, 100));
+                g.setColor(new Color(102, 73, 44, 100));
             } else {
-                g2.setColor(new Color(255, 183, 123, 100));
+                g.setColor(new Color(255, 183, 123, 100));
             }
         }
 
-        g2.fillRect(0, 0, size.width, size.height);
+        g.fillRect(0, 0, size.width, size.height);
     }
 
     public int getRow() {
@@ -44,6 +42,14 @@ public class BoardSpace extends JComponent {
 
     public int getCol() {
         return col;
+    }
+
+    public boolean withinBounds() {
+        return (row >= 0 && row <= 7) && (col >= 0 && col <= 7);
+    }
+
+    public void highlight() {
+        setBackground(Color.GREEN);
     }
 
 }
