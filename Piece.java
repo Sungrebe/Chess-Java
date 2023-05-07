@@ -1,7 +1,6 @@
-/**
- * The Piece class is responsible for keeping track of where pieces and their attributes
- */
-public class Piece {
+import java.util.ArrayList;
+
+abstract class Piece {
 
     private String type;
     private String coordinate;
@@ -27,8 +26,13 @@ public class Piece {
         return coordinate;
     }
 
+    public void setCoordinate(String coordinate) {
+        this.coordinate = coordinate;
+    }
+
     public String getSide() {
         return side;
     }
 
+    public abstract ArrayList<String> moves();
 }

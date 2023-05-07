@@ -1,10 +1,45 @@
-/**
- * The Pawn class is responsible for the Pawn chess pieces
- */
+import java.util.ArrayList;
+
 public class Pawn extends Piece {
 
     public Pawn(String coordinate, String side) {
         super("pawn", coordinate, side);
+    }
+
+    private boolean hasBeenMoved() {
+        if (getSide().equals("black")) {
+            return Integer.parseInt(getCoordinate().substring(1, 2)) != 7;
+        } else {
+            return Integer.parseInt(getCoordinate().substring(1, 2)) != 2;
+        }
+    }
+
+    public ArrayList<String> moves() {
+        ArrayList<String> availableCoordinates = new ArrayList<String>();
+        int coordX = Integer.parseInt(getCoordinate().substring(1, 2));
+        String coordY = getCoordinate().substring(0, 1);
+
+        if (hasBeenMoved()) {
+            if (getSide().equals("black")) {
+                if (coordX - 1 >= 0) {
+                    availableCoordinates.add(coordY + (coordX - 1));
+                }
+            } else {
+                if (coordX + 1 <= 8) {
+                    availableCoordinates.add(coordY + (coordX + 1));
+                }
+            }
+        } else {
+            if (getSide().equals("black")) {
+                availableCoordinates.add(coordY + (coordX - 1));
+                availableCoordinates.add(coordY + (coordX - 2));
+            } else {
+                availableCoordinates.add(coordY + (coordX + 1));
+                availableCoordinates.add(coordY + (coordX + 2));
+            }
+        }
+
+        return availableCoordinates;
     }
     
 }

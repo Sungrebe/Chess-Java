@@ -1,5 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
 
 /**
@@ -132,7 +134,8 @@ public class Board extends JComponent implements MouseListener {
 
         private String coordinate;
         private Piece cp;
-        
+                private ArrayList<String> cpMoves;
+
         /**
          * This is the Space constructor
          * @param coordinate the coordinate of the piece
@@ -167,6 +170,33 @@ public class Board extends JComponent implements MouseListener {
             return cp != null;
         }
 
+        public void getPieceMoves(int x, int y) {
+            if (hasPiece()) {
+                cp.setCoordinate(spaces[x][y].getCoordinate());
+                cpMoves = cp.moves();
+            }
+
+            if (cp instanceof Pawn) {
+                if (cp.getSide().equals("white")) {
+                    if (spaces[x - 1][y + 1].hasPiece() && !spaces[x - 1][y + 1].getCp().getType().equals("king")) {
+                        cpMoves.add(spaces[x - 1][y + 1].getCoordinate());
+                    }
+
+                    if (spaces[x - 1][y - 1].hasPiece() && !spaces[x - 1][y + 1].getCp().getType().equals("king")) {
+                        cpMoves.add(spaces[x - 1][y - 1].getCoordinate());
+                    }
+                } else if (cp.getSide().equals("black")) {
+                    if (spaces[x + 1][y - 1].hasPiece() && !spaces[x - 1][y + 1].getCp().getType().equals("king")) {
+                        cpMoves.add(spaces[x + 1][y - 1].getCoordinate());
+                    }
+
+                    if (spaces[x + 1][y + 1].hasPiece() && !spaces[x - 1][y + 1].getCp().getType().equals("king")) {
+                        cpMoves.add(spaces[x + 1][y + 1].getCoordinate());
+                    }
+                }
+            }
+        }
+
         /**
          * The movePiece method moves a piece from one space to another
          * @param destX the x coordinate of the new space
@@ -178,8 +208,12 @@ public class Board extends JComponent implements MouseListener {
                 int sourceRow = getRow(this.coordinate);
                 int sourceCol = getCol(this.coordinate);
 
-                spaces[destX][destY].setPiece(cp);
-                spaces[sourceRow][sourceCol].setPiece(null);
+                if (cpMoves.contains(spaces[destX][destY].getCoordinate())) {
+                    spaces[destX][destY].setPiece(cp);
+                    spaces[sourceRow][sourceCol].setPiece(null);
+                } else {
+                    System.out.println("Invalid move");
+                }
 
                 repaint();
             } else {
@@ -257,9 +291,6 @@ public class Board extends JComponent implements MouseListener {
 
     }
 
-    /**
-     * 
-     */
     public void mouseClicked(MouseEvent evt) {
         // code goes here
     }
@@ -275,22 +306,24 @@ public class Board extends JComponent implements MouseListener {
             endX = evt.getY() / 50;
             endY = evt.getX() / 50;
 
-            spaces[startX][startY].movePiece(endX, endY);
+            if (endX == startX && endY == startY) {
+                return;
+            } else {
+                spaces[startX][startY].getPieceMoves(startX, startY);
+                spaces[startX][startY].movePiece(endX, endY);
+            }
         } else {
             startX = evt.getY() / 50;
             startY = evt.getX() / 50;
+
+            spaces[startX][startY].getPieceMoves(startX, startY);
         }
     }
 
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        //System.out.println("mouse released");
-    }
+    public void mouseReleased(MouseEvent evt) {}
 
-    @Override
-    public void mouseEntered(MouseEvent e) {}
+    public void mouseEntered(MouseEvent evt) {}
 
-    @Override
-    public void mouseExited(MouseEvent e) {}
+    public void mouseExited(MouseEvent evt) {}
 
 }
