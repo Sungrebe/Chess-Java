@@ -1,6 +1,9 @@
 import java.awt.*;
 import javax.swing.*;
 
+/**
+ * The ChessApp class is where the chess game is run
+ */
 public class ChessApp extends JFrame {
 
     public ChessApp(String title) {

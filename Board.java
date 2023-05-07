@@ -2,6 +2,10 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+/**
+ * The Board class is responsible for setting up the layout of the board along with
+ * the chess pieces on the board
+ */
 public class Board extends JComponent implements MouseListener {
 
     private Space[][] spaces;
@@ -10,7 +14,9 @@ public class Board extends JComponent implements MouseListener {
     private int startY = 0;
     private int endX = 0;
     private int endY = 0;
-
+    /**
+     * The Board constructor sets up the chess board with the appropriate pieces
+     */
     public Board() {
         spaces = new Space[8][8];
 
@@ -88,7 +94,10 @@ public class Board extends JComponent implements MouseListener {
 
         addMouseListener(this);
     }
-
+    /**
+     * paintComponent is a method that sets up the chess board with alternating green and yellow squares
+     * @param g is the graphics object that paints the board
+     */
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
@@ -115,28 +124,54 @@ public class Board extends JComponent implements MouseListener {
             }
         }
     }
-
+    /**
+     * The Space class is responsible for movement of pieces and associating pieces with 
+     * their coordinates on the chess board
+     */
     class Space {
 
         private String coordinate;
         private Piece cp;
-
+        
+        /**
+         * This is the Space constructor
+         * @param coordinate the coordinate of the piece
+         * @param cp the chess piece
+         */
         public Space(String coordinate, Piece cp) {
             this.coordinate = coordinate;
             this.cp = cp;
         } 
 
+        /**
+         * This is the getter method for the chess piece
+         * @return the chess piece
+         */
         public Piece getCp() {
             return cp;
         }
 
+        /**
+         * This is the getter method for the coordinate
+         * @return the coordinate
+         */
         public String getCoordinate() {
             return coordinate;
         }
 
+        /**
+         * This method checks whether a space has a piece and returns true or false
+         * @return true if the space has a piece and false if it doesn't
+         */
         public boolean hasPiece() {
             return cp != null;
         }
+
+        /**
+         * The movePiece method moves a piece from one space to another
+         * @param destX the x coordinate of the new space
+         * @param destY the y coordinate of the new space
+         */
 
         public void movePiece(int destX, int destY) {
             if (hasPiece()) {
@@ -152,6 +187,11 @@ public class Board extends JComponent implements MouseListener {
             }
         }
 
+        /**
+         * The getRow method returns the row of the coordinate
+         * @param coord the coordinate of the piece
+         * @return the row of the piece
+         */
         public int getRow(String coord) {
             int coordX = Integer.parseInt(coord.substring(1, 2));
 
@@ -176,7 +216,12 @@ public class Board extends JComponent implements MouseListener {
                     return -1;
             }
         }
-
+        
+        /**
+         * The getCol method returns the column of the coordinate
+         * @param coord the coordinate to return the column of
+         * @return the column of the coordinate
+         */
         public int getCol(String coord) {
             String coordY = coord.substring(0, 1);
 
@@ -202,16 +247,27 @@ public class Board extends JComponent implements MouseListener {
             }
         }
 
+        /**
+         * The method setPiece sets a chess piece to a new space
+         * @param newPiece the piece to set to the space
+         */
         public void setPiece(Piece newPiece) {
             cp = newPiece;
         }
 
     }
 
+    /**
+     * 
+     */
     public void mouseClicked(MouseEvent evt) {
         // code goes here
     }
 
+    /**
+     * This method is used to move a piece when a player presses a piece and new space
+     * @param evt the event of clicking the pieces and spaces
+     */
     public void mousePressed(MouseEvent evt) {
         numClicks++;
 
