@@ -185,29 +185,37 @@ public class Board extends JComponent implements MouseListener {
             }
 
             if (cp.getType().equals("pawn")) {
-                if (cp.getSide().equals("white") && x >= 1) {
-                    if (y <= 6){
-                        if (spaces[x - 1][y + 1].hasPiece() && !spaces[x - 1][y + 1].getCp().getType().equals("king")) {
-                            cpMoves.add(spaces[x - 1][y + 1].getCoordinate());
+                if (cp.getSide().equals("white") && spaces[x - 1][y].hasPiece()) {
+                    System.out.println("Cannot move");
+                    cpMoves.clear();
+                } else if (cp.getSide().equals("black") && spaces[x + 1][y].hasPiece()) {
+                    System.out.println("Cannot move");
+                    cpMoves.clear();
+                } else {
+                    if (cp.getSide().equals("white") && x >= 1) {
+                        if (y <= 6){
+                            if (spaces[x - 1][y + 1].hasPiece() && !spaces[x - 1][y + 1].getCp().getType().equals("king")) {
+                                cpMoves.add(spaces[x - 1][y + 1].getCoordinate());
+                            }
                         }
-                    }
-                    if (y >= 1){
-                        if (spaces[x - 1][y - 1].hasPiece() && !spaces[x - 1][y - 1].getCp().getType().equals("king")) {
-                            cpMoves.add(spaces[x - 1][y - 1].getCoordinate());
-                        } 
-                    }
-                } else if (cp.getSide().equals("black") && x <= 6) {
-                    if (y >= 1){
-                        if (spaces[x + 1][y - 1].hasPiece() && !spaces[x + 1][y - 1].getCp().getType().equals("king")) {
-                            cpMoves.add(spaces[x + 1][y - 1].getCoordinate());
+                        if (y >= 1){
+                            if (spaces[x - 1][y - 1].hasPiece() && !spaces[x - 1][y - 1].getCp().getType().equals("king")) {
+                                cpMoves.add(spaces[x - 1][y - 1].getCoordinate());
+                            } 
                         }
-                    }
-                    if (y <= 6){
-                        if (spaces[x + 1][y + 1].hasPiece() && !spaces[x + 1][y + 1].getCp().getType().equals("king")) {
-                            cpMoves.add(spaces[x + 1][y + 1].getCoordinate());
+                    } else if (cp.getSide().equals("black") && x <= 6) {
+                        if (y >= 1){
+                            if (spaces[x + 1][y - 1].hasPiece() && !spaces[x + 1][y - 1].getCp().getType().equals("king")) {
+                                cpMoves.add(spaces[x + 1][y - 1].getCoordinate());
+                            }
                         }
+                        if (y <= 6){
+                            if (spaces[x + 1][y + 1].hasPiece() && !spaces[x + 1][y + 1].getCp().getType().equals("king")) {
+                                cpMoves.add(spaces[x + 1][y + 1].getCoordinate());
+                            }
+                        }
+                        
                     }
-                    
                 }
             } else {
                 boolean borderedOnLeft = (y - 1 >= 0) && spaces[x][y - 1].hasPiece();
@@ -360,14 +368,19 @@ public class Board extends JComponent implements MouseListener {
             if (endX == startX && endY == startY) {
                 return;
             } else {
-                spaces[startX][startY].getPieceMoves(startX, startY);
-                spaces[startX][startY].movePiece(endX, endY);
+                if (spaces[startX][startY].hasPiece()) {
+                    spaces[startX][startY].getPieceMoves(startX, startY);
+                    spaces[startX][startY].movePiece(endX, endY);
+                } else {
+                    System.out.println("No piece to move");
+                }
             }
         } else {
             startX = evt.getY() / 50;
             startY = evt.getX() / 50;
 
-            spaces[startX][startY].getPieceMoves(startX, startY);
+            if (spaces[startX][startY].hasPiece())
+                spaces[startX][startY].getPieceMoves(startX, startY);
         }
     }
 
