@@ -185,22 +185,29 @@ public class Board extends JComponent implements MouseListener {
             }
 
             if (cp.getType().equals("pawn")) {
-                if (cp.getSide().equals("white")) {
-                    if (spaces[x - 1][y + 1].hasPiece() && !spaces[x - 1][y + 1].getCp().getType().equals("king")) {
-                        cpMoves.add(spaces[x - 1][y + 1].getCoordinate());
+                if (cp.getSide().equals("white") && x >= 1) {
+                    if (y <= 6){
+                        if (spaces[x - 1][y + 1].hasPiece() && !spaces[x - 1][y + 1].getCp().getType().equals("king")) {
+                            cpMoves.add(spaces[x - 1][y + 1].getCoordinate());
+                        }
                     }
-
-                    if (spaces[x - 1][y - 1].hasPiece() && !spaces[x - 1][y - 1].getCp().getType().equals("king")) {
-                        cpMoves.add(spaces[x - 1][y - 1].getCoordinate());
+                    if (y >= 1){
+                        if (spaces[x - 1][y - 1].hasPiece() && !spaces[x - 1][y - 1].getCp().getType().equals("king")) {
+                            cpMoves.add(spaces[x - 1][y - 1].getCoordinate());
+                        } 
                     }
-                } else if (cp.getSide().equals("black")) {
-                    if (spaces[x + 1][y - 1].hasPiece() && !spaces[x + 1][y - 1].getCp().getType().equals("king")) {
-                        cpMoves.add(spaces[x + 1][y - 1].getCoordinate());
+                } else if (cp.getSide().equals("black") && x <= 6) {
+                    if (y >= 1){
+                        if (spaces[x + 1][y - 1].hasPiece() && !spaces[x + 1][y - 1].getCp().getType().equals("king")) {
+                            cpMoves.add(spaces[x + 1][y - 1].getCoordinate());
+                        }
                     }
-
-                    if (spaces[x + 1][y + 1].hasPiece() && !spaces[x + 1][y + 1].getCp().getType().equals("king")) {
-                        cpMoves.add(spaces[x + 1][y + 1].getCoordinate());
+                    if (y <= 6){
+                        if (spaces[x + 1][y + 1].hasPiece() && !spaces[x + 1][y + 1].getCp().getType().equals("king")) {
+                            cpMoves.add(spaces[x + 1][y + 1].getCoordinate());
+                        }
                     }
+                    
                 }
             } else {
                 boolean borderedOnLeft = (y - 1 >= 0) && spaces[x][y - 1].hasPiece();
