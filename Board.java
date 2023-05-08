@@ -170,28 +170,57 @@ public class Board extends JComponent implements MouseListener {
             return cp != null;
         }
 
+        public boolean sameSide(Space other) {
+            if (hasPiece() && other.hasPiece()) {
+                return cp.getSide().equals(other.getCp().getSide());
+            } else {
+                return false;
+            }
+        }
+
         public void getPieceMoves(int x, int y) {
             if (hasPiece()) {
                 cp.setCoordinate(spaces[x][y].getCoordinate());
                 cpMoves = cp.moves();
             }
 
-            if (cp instanceof Pawn) {
+            if (cp.getType().equals("pawn")) {
                 if (cp.getSide().equals("white")) {
                     if (spaces[x - 1][y + 1].hasPiece() && !spaces[x - 1][y + 1].getCp().getType().equals("king")) {
                         cpMoves.add(spaces[x - 1][y + 1].getCoordinate());
                     }
 
-                    if (spaces[x - 1][y - 1].hasPiece() && !spaces[x - 1][y + 1].getCp().getType().equals("king")) {
+                    if (spaces[x - 1][y - 1].hasPiece() && !spaces[x - 1][y - 1].getCp().getType().equals("king")) {
                         cpMoves.add(spaces[x - 1][y - 1].getCoordinate());
                     }
                 } else if (cp.getSide().equals("black")) {
-                    if (spaces[x + 1][y - 1].hasPiece() && !spaces[x - 1][y + 1].getCp().getType().equals("king")) {
+                    if (spaces[x + 1][y - 1].hasPiece() && !spaces[x + 1][y - 1].getCp().getType().equals("king")) {
                         cpMoves.add(spaces[x + 1][y - 1].getCoordinate());
                     }
 
-                    if (spaces[x + 1][y + 1].hasPiece() && !spaces[x - 1][y + 1].getCp().getType().equals("king")) {
+                    if (spaces[x + 1][y + 1].hasPiece() && !spaces[x + 1][y + 1].getCp().getType().equals("king")) {
                         cpMoves.add(spaces[x + 1][y + 1].getCoordinate());
+                    }
+                }
+            } else {
+                boolean borderedOnLeft = (y - 1 >= 0) && spaces[x][y - 1].hasPiece();
+                boolean borderedOnRight = (y + 1 <= 7) && spaces[x][y + 1].hasPiece();
+                boolean borderedOnTop = (x - 1 >= 0) && spaces[x - 1][y].hasPiece();
+                boolean borderedOnBottom = (x + 1 <= 7) && spaces[x + 1][y].hasPiece();
+                
+                if (cp.getType().equals("bishop")) {
+                    boolean borderedLeftDiag = (x - 1 >= 0 && y - 1 >= 0) && spaces[x - 1][y - 1].hasPiece();
+                    boolean borderedRightDiag = (x - 1 <= 7 && y + 1 <= 7) && spaces[x - 1][y + 1].hasPiece();
+
+                    if (Integer.parseInt(cp.getCoordinate().substring(1, 2)) == 1 
+                        && borderedOnRight && borderedOnTop && borderedOnLeft && borderedLeftDiag && borderedRightDiag
+                    ) {
+                        cpMoves.clear();
+                    } else if (Integer.parseInt(cp.getCoordinate().substring(1, 2)) == 8 && borderedOnLeft
+                    && borderedLeftDiag && borderedRightDiag) {
+                        cpMoves.clear();
+                    } else if (borderedOnLeft && borderedOnRight && borderedOnTop && borderedOnBottom && borderedLeftDiag && borderedRightDiag) {
+                        cpMoves.clear();
                     }
                 }
             }
@@ -208,14 +237,29 @@ public class Board extends JComponent implements MouseListener {
                 int sourceRow = getRow(this.coordinate);
                 int sourceCol = getCol(this.coordinate);
 
-                if (cpMoves.contains(spaces[destX][destY].getCoordinate())) {
-                    spaces[destX][destY].setPiece(cp);
-                    spaces[sourceRow][sourceCol].setPiece(null);
+                if (cpMoves.isEmpty()) {
+                    System.out.println("No available moves");
                 } else {
-                    System.out.println("Invalid move");
-                }
+                    boolean onSameSide = false;
+                    if (spaces[destX][destY].hasPiece()) {
+                        onSameSide = spaces[sourceRow][sourceCol].sameSide(spaces[destX][destY]);
+                    }
 
-                repaint();
+                    if (spaces[destX][destY].hasPiece() && spaces[destX][destY].getCp().getType().equals("king")) {
+                        System.out.println("Cannot capture king");
+                    } else if (spaces[destX][destY].hasPiece() && onSameSide) {
+                        System.out.println("Cannot capture a piece on your side");
+                    } else {
+                        if (cpMoves.contains(spaces[destX][destY].getCoordinate())) {
+                            spaces[destX][destY].setPiece(cp);
+                            spaces[sourceRow][sourceCol].setPiece(null);
+                        } else {
+                            System.out.println("Invalid move");
+                        }
+                    }
+
+                    repaint();
+                }
             } else {
                 System.out.println("No piece to move");
             }
