@@ -5,10 +5,19 @@ import java.util.ArrayList;
  */
 public class Knight extends Piece {
 
+    /**
+     * The knight constructor
+     * @param coordinate the coordinate of the knight
+     * @param side the side that the knight is on
+     */
     public Knight(String coordinate, String side) {
         super("knight", coordinate, side);
     }
 
+    /**
+     * The moves method returns the moves that the knight can make
+     * @return an arraylist with the moves that the knight can make
+     */
     public ArrayList<String> moves() {
         ArrayList<String> knightMoves = new ArrayList<String>();
         int coordX = Integer.parseInt(getCoordinate().substring(1, 2));

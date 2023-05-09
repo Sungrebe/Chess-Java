@@ -6,12 +6,19 @@ import java.util.ArrayList;
 */
 public class King extends Piece {
 
-
+    /**
+     * the King constructor
+     * @param coordinate the coordinate of the piece
+     * @param side the side that the piece is on
+     */
    public King(String coordinate, String side) {
        super("king", coordinate, side);
    }
 
-
+   /**
+    * the moves method determines what moves the King can make
+    * @return an arraylist with moves that the King can make
+    */
    public ArrayList<String> moves() {
        ArrayList<String> kingMoves = new ArrayList<String>();
        //used to easily switch between column values

@@ -6,11 +6,19 @@ import java.util.Arrays;
  */
 public class Bishop extends Piece {
 
+    /**
+     * The bishop constructor
+     * @param coordinate the coordinate of the piece
+     * @param side which side the piece belongs to
+     */
     public Bishop(String coordinate, String side) {
         super("bishop", coordinate, side);
     }
 
-    @Override
+    /**
+     * the moves method determines the moves for the bishop
+     * @return an arraylist containing the possible moves for the bishop
+     */
     public ArrayList<String> moves() {
         ArrayList<String> bishopCoordinates = new ArrayList<String>();
         String[] columns = {"A", "B", "C", "D", "E", "F", "G", "H"};

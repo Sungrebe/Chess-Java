@@ -6,10 +6,19 @@ import java.util.Arrays;
  */
 public class Queen extends Piece {
 
+    /**
+     * The queen constructor
+     * @param coordinate the coordinate of the queen
+     * @param side the side that the queen is on
+     */
     public Queen(String coordinate, String side) {
         super("queen", coordinate, side);
     }
 
+    /**
+     * the moves method returns the possible moves that the queen can make
+     * @return an arraylist with the possible movements of the queen
+     */
     public ArrayList<String> moves() {
         ArrayList<String> queenMoves = new ArrayList<String>();
         //used to easily switch between column values
