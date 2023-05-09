@@ -26,6 +26,14 @@ abstract class Piece {
         return coordinate;
     }
 
+    public int getFile(){
+        return Integer.parseInt(coordinate.substring(1, 2));
+    }
+
+    public int getRank(){
+        return coordinate.substring(0, 1);
+    }
+
     public void setCoordinate(String coordinate) {
         this.coordinate = coordinate;
     }
