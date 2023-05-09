@@ -5,10 +5,19 @@ import java.util.ArrayList;
  */
 public class Rook extends Piece {
 
+    /**
+     * The constructor for the rook
+     * @param coordinate the coordinate of the rook
+     * @param side the side that the rook is on
+     */
     public Rook(String coordinate, String side) {
         super("rook", coordinate, side);
     }
-
+    
+    /**
+     * The moves method determines the moves that the rook can make
+     * @return an arraylist with the possible moves that the rook can make
+     */
     public ArrayList<String> moves() {
         ArrayList<String> rookMoves = new ArrayList<String>();
         //used to easily switch between column values
