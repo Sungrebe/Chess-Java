@@ -23,7 +23,7 @@ public class Rook extends Piece {
             } 
         }
         //the spots in front of the rook
-        for (int i = coordX; i < 8; i++){
+        for (int i = coordX; i <= 8; i++){
             rookMoves.add(coordY + (i));
         }
 
