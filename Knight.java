@@ -84,15 +84,20 @@ public class Knight extends Piece {
             knightMoves.add(vertRightY + (coordX + 2));
         }
 
-        if (coordX - 2 >= 0) {
+        if (coordX - 2 > 0) {
             knightMoves.add(vertLeftY + (coordX - 2));
             knightMoves.add(vertRightY + (coordX - 2));
         }
 
-        knightMoves.add(horLeftY + (coordX + 1));
-        knightMoves.add(horRightY + (coordX + 1));
-        knightMoves.add(horLeftY + (coordX - 1));
-        knightMoves.add(horRightY + (coordX - 1));
+        if (coordX + 1 <= 8) {
+            knightMoves.add(horLeftY + (coordX + 1));
+            knightMoves.add(horRightY + (coordX + 1));
+        }
+        
+        if (coordX - 1 > 0) {
+            knightMoves.add(horLeftY + (coordX - 1));
+            knightMoves.add(horRightY + (coordX - 1));
+        }
 
         return knightMoves;
     }
