@@ -173,6 +173,11 @@ public class Board extends JComponent implements MouseListener {
             return cp != null;
         }
 
+        /**
+         * A method that returns whether or not a piece in a space is on the same side as a selected piece
+         * @param other the other space with a piece
+         * @return true if the piece is on the same side, false otherwise
+         */
         public boolean sameSide(Space other) {
             if (hasPiece() && other.hasPiece()) {
                 return cp.getSide().equals(other.getCp().getSide());
@@ -181,6 +186,11 @@ public class Board extends JComponent implements MouseListener {
             }
         }
 
+        /**
+         * A method that determines whether moves are valid
+         * @param x the x coordinate of hte piece
+         * @param y the y coordinate of the piece
+         */
         public void getPieceMoves(int x, int y) {
             if (hasPiece()) {
                 cp.setCoordinate(spaces[x][y].getCoordinate());
