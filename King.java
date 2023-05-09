@@ -38,8 +38,6 @@ public class King extends Piece {
        if (coordYIndex - 1 >= 0) {
         //the spot to the left of the king
        kingMoves.add(column[coordYIndex - 1] + coordX);
-        //the spot to the left of the king
-       kingMoves.add(column[coordYIndex - 1] + coordX);
         //the spot to the top left diagonal
         kingMoves.add(column[coordYIndex - 1] + (coordX + 1));
 
