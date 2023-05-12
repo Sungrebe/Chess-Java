@@ -26,7 +26,8 @@ public class Board extends JComponent implements MouseListener {
     private int destRank;
 
     // Kings can only castle if they haven't moved yet
-    private boolean castlingValid = true;
+    private boolean whiteCastlingValid = true;
+    private boolean blackCastlingValid = true;
 
     public Board() {
         spaces = new Space[8][8];
@@ -143,17 +144,18 @@ public class Board extends JComponent implements MouseListener {
         ArrayList<String> cpMoves = cp.getMoves();
 
         if (cp.isPawn()) {
+            Pawn p = (Pawn) cp;
             // Pawns can move diagonally if they can capture a piece from the opposing side
             // If so, add the diagonals to the list of possible moves
-            if (cp.isWhite()) {
+            if (p.isWhite()) {
                 // If a white pawn is bounded in front, it cannot move
                 // or two spaces in front
                 if ((cpRow - 1 >= 0 && spaces[cpRow - 1][cpCol].getCp() != null) 
-                || (cpRow - 2 >= 0 && spaces[cpRow - 2][cpCol].getCp() != null)) {
+                || (!p.hasMoved() && cpRow - 2 >= 0 && spaces[cpRow - 2][cpCol].getCp() != null)) {
                     System.out.println("bounded in front");
                     cpMoves.clear();
                 } else {
-                    cpMoves = cp.getMoves();
+                    cpMoves = p.getMoves();
                 }
 
                 if (cpRow - 1 >= 0 && cpCol - 1 >= 0 && spaces[cpRow - 1][cpCol - 1].getCp() != null) {
@@ -166,7 +168,7 @@ public class Board extends JComponent implements MouseListener {
             } else if (cp.isBlack()) {
                 // If a black pawn is bounded below, it cannot move
                 if ((cpRow + 1 <= 7 && spaces[cpRow + 1][cpCol].getCp() != null) 
-                || (cpRow + 1 <= 7 && spaces[cpRow + 2][cpCol].getCp() != null)) {
+                || (!p.hasMoved() && cpRow + 2 <= 7 && spaces[cpRow + 2][cpCol].getCp() != null)) {
                     cpMoves.clear();
                 } else {
                     cpMoves = cp.getMoves();
@@ -213,9 +215,9 @@ public class Board extends JComponent implements MouseListener {
             if (cp.isWhite()) whiteKingPos = ""+cp.getFile() + cp.getRank();
             if (cp.isBlack()) blackKingPos = ""+cp.getFile() + cp.getRank();
 
-            System.out.println("castling valid " + castlingValid);
-            if (castlingValid && spaces[cpRow][cpCol + 1].getCp() == null 
-                && spaces[cpRow][cpCol + 2].getCp() == null) {
+            if (
+                (cp.isWhite() && whiteCastlingValid && spaces[cpRow][cpCol + 1].getCp() == null && spaces[cpRow][cpCol + 2].getCp() == null) ||
+                (cp.isBlack() && blackCastlingValid && spaces[cpRow][cpCol + 1].getCp() == null && spaces[cpRow][cpCol + 2].getCp() == null)) {
                     cpMoves.add(""+(char) ((int) 'A' + cpRow) + (8 - cpCol - 2));
 
                     spaces[cpRow][cpCol + 2].setCp(spaces[cpRow][cpCol].getCp());
@@ -223,9 +225,22 @@ public class Board extends JComponent implements MouseListener {
                     spaces[cpRow][cpCol].removeCp();
                     spaces[cpRow][cpCol + 3].removeCp();
 
+                    // Switch turns between players
+                    if (whiteToMove) {
+                        whiteToMove = false;
+                        blackToMove = true;
+                    } else {
+                        whiteToMove = true;
+                        blackToMove = false;
+                    }
+
                     repaint();
-            } else if (castlingValid && spaces[cpRow][cpCol - 1].getCp() == null 
-                && spaces[cpRow][cpCol - 2].getCp() == null) {
+
+                    if (cp.isWhite()) whiteCastlingValid = false;
+                    if (cp.isBlack()) blackCastlingValid = false;
+            } else if (
+                (cp.isWhite() && whiteCastlingValid && spaces[cpRow][cpCol - 1].getCp() == null && spaces[cpRow][cpCol - 2].getCp() == null) ||
+                (cp.isBlack() && blackCastlingValid && spaces[cpRow][cpCol - 1].getCp() == null && spaces[cpRow][cpCol - 2].getCp() == null)) {
                     cpMoves.add(""+(char) ((int) 'A' + cpRow) + (8 - cpCol + 2));
 
                     spaces[cpRow][cpCol - 2].setCp(spaces[cpRow][cpCol].getCp());
@@ -233,7 +248,21 @@ public class Board extends JComponent implements MouseListener {
                     spaces[cpRow][cpCol].removeCp();
                     spaces[cpRow][cpCol - 4].removeCp();
 
+                    // Switch turns between players
+                    if (whiteToMove) {
+                        whiteToMove = false;
+                        blackToMove = true;
+                    } else {
+                        whiteToMove = true;
+                        blackToMove = false;
+                    }
+
                     repaint();
+
+                    if (cp.isWhite()) whiteCastlingValid = false;
+                    if (cp.isBlack()) blackCastlingValid = false;
+            } else {
+                cpMoves = cp.getMoves();
             }
         }
 
@@ -269,7 +298,8 @@ public class Board extends JComponent implements MouseListener {
                 // for the rest of the game
                 if ((thisCp.isKing() && destRow != sourceRow && destCol != sourceCol + 2)
                 || (thisCp.isKing() && destRow != sourceRow && destCol != sourceCol - 2)) {
-                    castlingValid = false;
+                    if (thisCp.isWhite()) whiteCastlingValid = false;
+                    if (thisCp.isBlack()) blackCastlingValid = false;
                 }
 
                 ArrayList<String> validMoves = getValidMoves(sourceRow, sourceCol, thisCp);
@@ -305,14 +335,19 @@ public class Board extends JComponent implements MouseListener {
     public void mousePressed(MouseEvent evt) {
         numClicks++;
 
+        // If the number of clicks is odd, then the user has selected a starting piece and is trying to move
         if (numClicks % 2 == 1) {
             sourceFile = (char) ((int) 'A' + evt.getX() / 50);
             sourceRank = 8 - evt.getY() / 50;
         } else if (numClicks % 2 == 0) {
+            // If the number of clicks is even, then the user has selected a destination to move the piece to
             destFile = (char) ((int) 'A' + evt.getX() / 50);
             destRank = 8 - evt.getY() / 50;
 
             movePiece(sourceFile, sourceRank, destFile, destRank);
+        } else if (numClicks % 3 == 0) {
+            // If the number of clicks is divisible by three, then reset the click count to 0 (so that the user can make a second move)
+            numClicks = 0;
         }
     }
 

@@ -6,6 +6,10 @@ public class Pawn extends ChessPiece {
 		super("pawn", file, rank, side);
 	}
 
+	public boolean hasMoved() {
+		return (isBlack() && getRank() != 2) || (isWhite() && getRank() != 7);
+	}
+
 	public ArrayList<String> getMoves() {
 		ArrayList<String> pawnMoves = new ArrayList<String>();
 
