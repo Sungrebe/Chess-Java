@@ -4,106 +4,115 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-/**
- * The Board class is responsible for setting up the layout of the board along with
- * the chess pieces on the board
- */
 public class Board extends JComponent implements MouseListener {
-
+    
     private Space[][] spaces;
-    private int numClicks = 0; // number of times user has clicked the board
-    private int startX = 0;
-    private int startY = 0;
-    private int endX = 0;
-    private int endY = 0;
 
-    private int numMoves = 0; // number of moves the user has made
+    // Determine player turns
+    private boolean whiteToMove;
+    private boolean blackToMove;
 
-    /**
-     * The Board constructor sets up the chess board with the appropriate pieces
-     */
+    // Get the current positions of the white king and the black king (to determine check and checkmate)
+    private String whiteKingPos;
+    private String blackKingPos;
+
+    // Number of times the user has pressed the board
+    private int numClicks = 0;
+
+    // Information about the starting and ending coordinates that the user click
+    private char sourceFile;
+    private int sourceRank;
+    private char destFile;
+    private int destRank;
+
+    // Kings can only castle if they haven't moved yet
+    private boolean castlingValid = true;
+
     public Board() {
         spaces = new Space[8][8];
 
-        spaces[0][0] = new Space("A8", new Rook("A8", "black"));
-        spaces[0][1] = new Space("B8", new Knight("B8", "black"));
-        spaces[0][2] = new Space("C8", new Bishop("C8", "black"));
-        spaces[0][3] = new Space("D8", new Queen("D8", "black"));
-        spaces[0][4] = new Space("E8", new King("E8", "black"));
-        spaces[0][5] = new Space("F8", new Bishop("F8", "black"));
-        spaces[0][6] = new Space("G8", new Knight("G8", "black"));
-        spaces[0][7] = new Space("H8", new Rook("H8", "black"));
+        whiteToMove = true;
+        blackToMove = false;
 
-        spaces[1][0] = new Space("A7", new Pawn("A7", "black"));
-        spaces[1][1] = new Space("B7", new Pawn("B7", "black"));
-        spaces[1][2] = new Space("C7", new Pawn("C7", "black"));
-        spaces[1][3] = new Space("D7", new Pawn("D7", "black"));
-        spaces[1][4] = new Space("E7", new Pawn("E7", "black"));
-        spaces[1][5] = new Space("F7", new Pawn("F7", "black"));
-        spaces[1][6] = new Space("G7", new Pawn("G7", "black"));
-        spaces[1][7] = new Space("H7", new Pawn("H7", "black"));
+        whiteKingPos = "E1";
+        blackKingPos = "E8";
 
-        spaces[2][0] = new Space("A6", null);
-        spaces[2][1] = new Space("B6", null);
-        spaces[2][2] = new Space("C6", null);
-        spaces[2][3] = new Space("D6", null);
-        spaces[2][4] = new Space("E6", null);
-        spaces[2][5] = new Space("F6", null);
-        spaces[2][6] = new Space("G6", null);
-        spaces[2][7] = new Space("H6", null);
+        spaces[0][0] = new Space(0, 0, new Rook('A', 8, "black"));
+		spaces[0][1] = new Space(0, 1, new Knight('B', 8, "black"));
+		spaces[0][2] = new Space(0, 2, new Bishop('C', 8, "black"));
+		spaces[0][3] = new Space(0, 3, new Queen('D', 8, "black"));
+		spaces[0][4] = new Space(0, 4, new King('E', 8, "black"));
+		spaces[0][5] = new Space(0, 5, new Bishop('F', 8, "black"));
+		spaces[0][6] = new Space(0, 6, new Knight('G', 8, "black"));
+		spaces[0][7] = new Space(0, 7, new Rook('H', 8, "black"));
 
-        spaces[3][0] = new Space("A5", null);
-        spaces[3][1] = new Space("B5", null);
-        spaces[3][2] = new Space("C5", null);
-        spaces[3][3] = new Space("D5", null);
-        spaces[3][4] = new Space("E5", null);
-        spaces[3][5] = new Space("F5", null);
-        spaces[3][6] = new Space("G5", null);
-        spaces[3][7] = new Space("H5", null);
+        spaces[1][0] = new Space(1, 0, new Pawn('A', 7, "black"));
+		spaces[1][1] = new Space(1, 1, new Pawn('B', 7, "black"));
+		spaces[1][2] = new Space(1, 2, new Pawn('C', 7, "black"));
+		spaces[1][3] = new Space(1, 3, new Pawn('D', 7, "black"));
+		spaces[1][4] = new Space(1, 4, new Pawn('E', 7, "black"));
+		spaces[1][5] = new Space(1, 5, new Pawn('F', 7, "black"));
+		spaces[1][6] = new Space(1, 6, new Pawn('G', 7, "black"));
+		spaces[1][7] = new Space(1, 7, new Pawn('H', 7, "black"));
 
-        spaces[4][0] = new Space("A4", null);
-        spaces[4][1] = new Space("B4", null);
-        spaces[4][2] = new Space("C4", null);
-        spaces[4][3] = new Space("D4", null);
-        spaces[4][4] = new Space("E4", null);
-        spaces[4][5] = new Space("F4", null);
-        spaces[4][6] = new Space("G4", null);
-        spaces[4][7] = new Space("H4", null);
+        spaces[2][0] = new Space(2, 0, null);
+		spaces[2][1] = new Space(2, 1, null);
+		spaces[2][2] = new Space(2, 2, null);
+		spaces[2][3] = new Space(2, 3, null);
+		spaces[2][4] = new Space(2, 4, null);
+		spaces[2][5] = new Space(2, 5, null);
+		spaces[2][6] = new Space(2, 6, null);
+		spaces[2][7] = new Space(2, 7, null);
 
-        spaces[5][0] = new Space("A3", null);
-        spaces[5][1] = new Space("B3", null);
-        spaces[5][2] = new Space("C3", null);
-        spaces[5][3] = new Space("D3", null);
-        spaces[5][4] = new Space("E3", null);
-        spaces[5][5] = new Space("F3", null);
-        spaces[5][6] = new Space("G3", null);
-        spaces[5][7] = new Space("H3", null);
+		spaces[3][0] = new Space(3, 0, null);
+		spaces[3][1] = new Space(3, 1, null);
+		spaces[3][2] = new Space(3, 2, null);
+		spaces[3][3] = new Space(3, 3, null);
+		spaces[3][4] = new Space(3, 4, null);
+		spaces[3][5] = new Space(3, 5, null);
+		spaces[3][6] = new Space(3, 6, null);
+		spaces[3][7] = new Space(3, 7, null);
 
-        spaces[6][0] = new Space("A2", new Pawn("A2", "white"));
-        spaces[6][1] = new Space("B2", new Pawn("B2", "white"));
-        spaces[6][2] = new Space("C2", new Pawn("C2", "white"));
-        spaces[6][3] = new Space("D2", new Pawn("D2", "white"));
-        spaces[6][4] = new Space("E2", new Pawn("E2", "white"));
-        spaces[6][5] = new Space("F2", new Pawn("F2", "white"));
-        spaces[6][6] = new Space("G2", new Pawn("G2", "white"));
-        spaces[6][7] = new Space("H2", new Pawn("H2", "white"));
+		spaces[4][0] = new Space(4, 0, null);
+		spaces[4][1] = new Space(4, 1, null);
+		spaces[4][2] = new Space(4, 2, null);
+		spaces[4][3] = new Space(4, 3, null);
+		spaces[4][4] = new Space(4, 4, null);
+		spaces[4][5] = new Space(4, 5, null);
+		spaces[4][6] = new Space(4, 6, null);
+		spaces[4][7] = new Space(4, 7, null);
 
-        spaces[7][0] = new Space("A1", new Rook("A1", "white"));
-        spaces[7][1] = new Space("B1", new Knight("B1", "white"));
-        spaces[7][2] = new Space("C1", new Bishop("C1", "white"));
-        spaces[7][3] = new Space("D1", new Queen("D1", "white"));
-        spaces[7][4] = new Space("E1", new King("E1", "white"));
-        spaces[7][5] = new Space("F1", new Bishop("F1", "white"));
-        spaces[7][6] = new Space("G1", new Knight("G1", "white"));
-        spaces[7][7] = new Space("H1", new Rook("H1", "white"));
+		spaces[5][0] = new Space(5, 0, null);
+		spaces[5][1] = new Space(5, 1, null);
+		spaces[5][2] = new Space(5, 2, null);
+		spaces[5][3] = new Space(5, 3, null);
+		spaces[5][4] = new Space(5, 4, null);
+		spaces[5][5] = new Space(5, 5, null);
+		spaces[5][6] = new Space(5, 6, null);
+		spaces[5][7] = new Space(5, 7, null);
+
+        spaces[6][0] = new Space(6, 0, new Pawn('A', 2, "white"));
+		spaces[6][1] = new Space(6, 1, new Pawn('B', 2, "white"));
+		spaces[6][2] = new Space(6, 2, new Pawn('C', 2, "white"));
+		spaces[6][3] = new Space(6, 3, new Pawn('D', 2, "white"));
+		spaces[6][4] = new Space(6, 4, new Pawn('E', 2, "white"));
+		spaces[6][5] = new Space(6, 5, new Pawn('F', 2, "white"));
+		spaces[6][6] = new Space(6, 6, new Pawn('G', 2, "white"));
+		spaces[6][7] = new Space(6, 7, new Pawn('H', 2, "white"));
+
+		spaces[7][0] = new Space(7, 0, new Rook('A', 1, "white"));
+		spaces[7][1] = new Space(7, 1, new Knight('B', 1, "white"));
+		spaces[7][2] = new Space(7, 2, new Bishop('C', 1, "white"));
+		spaces[7][3] = new Space(7, 3, new Queen('D', 1, "white"));
+		spaces[7][4] = new Space(7, 4, new King('E', 1, "white"));
+		spaces[7][5] = new Space(7, 5, new Bishop('F', 1, "white"));
+		spaces[7][6] = new Space(7, 6, new Knight('G', 1, "white"));
+		spaces[7][7] = new Space(7, 7, new Rook('H', 1, "white"));
 
         addMouseListener(this);
     }
-    /**
-     * paintComponent is a method that sets up the chess board with alternating green and yellow squares
-     * @param g is the graphics object that paints the board
-     */
-    protected void paintComponent(Graphics g) {
+
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         Graphics2D g2d = (Graphics2D) g;
@@ -120,270 +129,189 @@ public class Board extends JComponent implements MouseListener {
             
                 g2d.fillRect(col * 50, row * 50, 50, 50);
 
-                if (spaces[row][col].hasPiece()) {
-                    Piece cpToDraw = spaces[row][col].getCp();
-                    Image cpImg = Toolkit.getDefaultToolkit().getImage("assets/" + cpToDraw.getType() + " " + cpToDraw.getSide() + ".png");
+                if (spaces[row][col].getCp() != null) {
+                    ChessPiece c = spaces[row][col].getCp();
+                    Image cpImg = Toolkit.getDefaultToolkit().getImage("assets/" + c.getName() + " " + c.getSide() + ".png");
 
                     g2d.drawImage(cpImg, 2 + col * 50, 3 + row * 50, 45, 45, new Color(0f, 0f, 0f, 0), this);
                 }
             }
         }
     }
-    /**
-     * The Space class is responsible for movement of pieces and associating pieces with 
-     * their coordinates on the chess board
-     */
-    class Space {
 
-        private String coordinate;
-        private Piece cp;
-                private ArrayList<String> cpMoves;
+    public ArrayList<String> getValidMoves(int cpRow, int cpCol, ChessPiece cp) {
+        ArrayList<String> cpMoves = cp.getMoves();
 
-        /**
-         * This is the Space constructor
-         * @param coordinate the coordinate of the piece
-         * @param cp the chess piece
-         */
-        public Space(String coordinate, Piece cp) {
-            this.coordinate = coordinate;
-            this.cp = cp;
-        } 
-
-        /**
-         * This is the getter method for the chess piece
-         * @return the chess piece
-         */
-        public Piece getCp() {
-            return cp;
-        }
-
-        /**
-         * This is the getter method for the coordinate
-         * @return the coordinate
-         */
-        public String getCoordinate() {
-            return coordinate;
-        }
-
-        /**
-         * This method checks whether a space has a piece and returns true or false
-         * @return true if the space has a piece and false if it doesn't
-         */
-        public boolean hasPiece() {
-            return cp != null;
-        }
-
-        /**
-         * A method that returns whether or not a piece in a space is on the same side as a selected piece
-         * @param other the other space with a piece
-         * @return true if the piece is on the same side, false otherwise
-         */
-        public boolean sameSide(Space other) {
-            if (hasPiece() && other.hasPiece()) {
-                return cp.getSide().equals(other.getCp().getSide());
-            } else {
-                return false;
-            }
-        }
-
-        /**
-         * A method that determines whether moves are valid
-         * @param x the x coordinate of hte piece
-         * @param y the y coordinate of the piece
-         */
-        public void getPieceMoves(int x, int y) {
-            if (hasPiece()) {
-                cp.setCoordinate(spaces[x][y].getCoordinate());
-                cpMoves = cp.moves();
-            }
-
-            if (cp.getType().equals("pawn")) {
-                if (cp.getSide().equals("white") && x >= 1) {
-                    if (y <= 6){
-                        if (spaces[x - 1][y + 1].hasPiece() && !spaces[x - 1][y + 1].getCp().getType().equals("king")) {
-                            cpMoves.add(spaces[x - 1][y + 1].getCoordinate());
-                        }
-                    }
-                    if (y >= 1){
-                        if (spaces[x - 1][y - 1].hasPiece() && !spaces[x - 1][y - 1].getCp().getType().equals("king")) {
-                            cpMoves.add(spaces[x - 1][y - 1].getCoordinate());
-                        } 
-                    }
-                } else if (cp.getSide().equals("black") && x <= 6) {
-                    if (y >= 1){
-                        if (spaces[x + 1][y - 1].hasPiece() && !spaces[x + 1][y - 1].getCp().getType().equals("king")) {
-                            cpMoves.add(spaces[x + 1][y - 1].getCoordinate());
-                        }
-                    }
-                    if (y <= 6){
-                        if (spaces[x + 1][y + 1].hasPiece() && !spaces[x + 1][y + 1].getCp().getType().equals("king")) {
-                            cpMoves.add(spaces[x + 1][y + 1].getCoordinate());
-                        }
-                    }
+        if (cp.isPawn()) {
+            // Pawns can move diagonally if they can capture a piece from the opposing side
+            // If so, add the diagonals to the list of possible moves
+            if (cp.isWhite()) {
+                if (cpRow - 1 >= 0 && cpCol - 1 >= 0 && spaces[cpRow - 1][cpCol - 1].getCp() != null) {
+                    // If top left diagonal has a piece
+                    cpMoves.add(""+(char) ((int) 'A' + cpCol - 1) + (8 - cpRow + 1));
+                } else if (cpRow - 1 >= 0 && cpCol + 1 <= 7 && spaces[cpRow - 1][cpCol + 1].getCp() != null) {
+                    // If top right diagonal has a piece
+                    cpMoves.add(""+(char) ((int) 'A' + cpCol + 1) + (8 - cpRow + 1));
                 } else {
-                    if (cp.getSide().equals("white") && spaces[x - 1][y].hasPiece() && cpMoves.size() == 1) {
-                        System.out.println("Cannot move");
+                    // If a white pawn is bounded in front, it cannot move
+                    if (cpRow - 1 >= 0 && spaces[cpRow - 1][cpCol].getCp() != null) {
                         cpMoves.clear();
-                    } else if (cp.getSide().equals("black") && spaces[x + 1][y].hasPiece() && cpMoves.size() == 1) {
-                        System.out.println("Cannot move");
-                        cpMoves.clear();
+                    } else {
+                        cpMoves = cp.getMoves();
                     }
                 }
+            } else if (cp.isBlack()) {
+                if (cpRow + 1 <= 7 && cpCol - 1 >= 0 && spaces[cpRow + 1][cpCol - 1].getCp() != null) {
+                    // If bottom left diagonal has a piece
+                    cpMoves.add(""+(char) ((int) 'A' + cpCol - 1) + (8 - cpRow - 1));
+                } else if (cpRow + 1 <= 7 && cpCol + 1 <= 7 && spaces[cpRow + 1][cpCol + 1].getCp() != null) {
+                    // If bottom right diagonal has a piece
+                    cpMoves.add(""+(char) ((int) 'A' + cpCol - 1) + (8 - cpRow - 1));
+                } else {
+                    // If a black pawn is bounded below, it cannot move
+                    if (cpRow + 1 <= 7 && spaces[cpRow + 1][cpCol].getCp() != null) {
+                        cpMoves.clear();
+                    } else {
+                        cpMoves = cp.getMoves();
+                    }
+                }
+            }
+        } else if (!cp.isKnight()) {
+            // All other pieces (except knights) cannot move if they bounded on all sides
+            boolean leftBounded = cpCol - 1 >= 0 && spaces[cpRow][cpCol - 1].getCp() != null;
+            boolean rightBounded = cpCol + 1 <= 7 && spaces[cpRow][cpCol + 1].getCp() != null;
+            boolean topBounded = cpRow - 1 >= 0 && spaces[cpRow - 1][cpCol].getCp() != null;
+            boolean bottomBounded = cpRow + 1 <= 7 && spaces[cpRow + 1][cpCol].getCp() != null;
+
+            // Check if diagonals are bounded (this applies to queens, bishops, and kings)
+            boolean topLeftDiagBounded = cpRow - 1 >= 0 && cpCol - 1 >= 0 && spaces[cpRow - 1][cpCol - 1].getCp() != null;
+            boolean topRightDiagBounded = cpRow - 1 >= 0 && cpCol + 1 <= 7 && spaces[cpRow - 1][cpCol + 1].getCp() != null;
+            boolean bottomLeftDiagBounded = cpRow + 1 <= 7 && cpCol - 1 >= 0 && spaces[cpRow + 1][cpCol - 1].getCp() != null;
+            boolean bottomRightDiagBounded = cpRow + 1 <= 7 && cpCol + 1 <= 7 && spaces[cpRow + 1][cpCol + 1].getCp() != null;
+
+            boolean diagonalBounded = (topLeftDiagBounded || cpRow == 0) && (topRightDiagBounded || cpRow == 0)
+                && (bottomLeftDiagBounded || cpRow == 7) && (bottomRightDiagBounded || cpRow == 7);
+
+            // If bounded by other pieces or the board, then clear the piece's moves
+            if ((leftBounded || cpCol == 0)
+                && (rightBounded || cpCol == 7) 
+                && (topBounded || cpRow == 0) 
+                && (bottomBounded || cpRow == 7) && (cp.isRook() || diagonalBounded) 
+                || (cp.isBishop() && diagonalBounded)) {
+                    cpMoves.clear();
             } else {
-                System.out.println("I am not a pawn");
+                cpMoves = cp.getMoves();
             }
         }
 
-        /**
-         * The movePiece method moves a piece from one space to another
-         * @param destX the x coordinate of the new space
-         * @param destY the y coordinate of the new space
-         */
+        // If the piece is a king, update the white king or black king pos variables
+        if (cp.isKing()) {
+            if (cp.isWhite()) whiteKingPos = ""+cp.getFile() + cp.getRank();
+            if (cp.isBlack()) blackKingPos = ""+cp.getFile() + cp.getRank();
 
-        public void movePiece(int destX, int destY) {
-            if (hasPiece()) {
-                int sourceRow = getRow(this.coordinate);
-                int sourceCol = getCol(this.coordinate);
+            System.out.println("castling valid");
+            if (castlingValid && spaces[cpRow][cpCol + 1].getCp() == null 
+                && spaces[cpRow][cpCol + 2].getCp() == null) {
+                    cpMoves.add(""+(char) ((int) 'A' + cpRow) + (8 - cpCol - 2));
 
-                System.out.println(cpMoves);
+                    spaces[cpRow][cpCol + 2].setCp(spaces[cpRow][cpCol].getCp());
+                    spaces[cpRow][cpCol + 1].setCp(spaces[cpRow][cpCol + 3].getCp());
+                    spaces[cpRow][cpCol].removeCp();
+                    spaces[cpRow][cpCol + 3].removeCp();
 
-                if (cpMoves.isEmpty()) {
-                    System.out.println("No available moves");
-                } else {
-                    boolean onSameSide = false;
-                    if (spaces[destX][destY].hasPiece()) {
-                        onSameSide = spaces[sourceRow][sourceCol].sameSide(spaces[destX][destY]);
+                    repaint();
+            } else if (castlingValid && spaces[cpRow][cpCol - 1].getCp() == null 
+                && spaces[cpRow][cpCol - 2].getCp() == null) {
+                    cpMoves.add(""+(char) ((int) 'A' + cpRow) + (8 - cpCol + 2));
+
+                    spaces[cpRow][cpCol - 2].setCp(spaces[cpRow][cpCol].getCp());
+                    spaces[cpRow][cpCol - 1].setCp(spaces[cpRow][cpCol - 4].getCp());
+                    spaces[cpRow][cpCol].removeCp();
+                    spaces[cpRow][cpCol - 4].removeCp();
+
+                    repaint();
+            }
+        }
+
+        // Determine check
+        // If another piece's moves contain either the white king or black king pos, and that piece is on the opposite
+        // side of the king being checked, then that would be considered check
+        if (!cp.getName().equals("king")) {
+            if (cp.isBlack() && cp.getMoves().contains(whiteKingPos)
+            || cp.isWhite() && cp.getMoves().contains(blackKingPos)) {
+                System.out.println("king in check");
+            }
+        }
+
+        return cpMoves;
+    }
+    
+    public void movePiece(char sourceF, int sourceR, char destF, int destR) {
+        int sourceRow = 8 - sourceR;
+        int sourceCol = (int) sourceF - 'A';
+
+        if (spaces[sourceRow][sourceCol].getCp() != null) {
+            ChessPiece thisCp = spaces[sourceRow][sourceCol].getCp();
+
+            if (whiteToMove && thisCp.isBlack()) {
+                System.out.println("White to move");
+            } else if (blackToMove && thisCp.isWhite()) {
+                System.out.println("Black to move");
+            } else {
+                ArrayList<String> validMoves = getValidMoves(sourceRow, sourceCol, thisCp);
+
+                if (validMoves.contains(""+destF + destR)) {
+                    int destRow = 8 - destR;
+                    int destCol = (int) destF - 'A';
+
+                    if ((thisCp.isKing() && destRow != sourceRow && destCol != sourceCol + 2)
+                    || (thisCp.isKing() && destRow != sourceRow && destCol != sourceCol - 2)) {
+                        castlingValid = false;
+                        System.out.println("cannot castle");
                     }
 
-                    if (spaces[destX][destY].hasPiece() && spaces[destX][destY].getCp().getType().equals("king")) {
-                        System.out.println("Cannot capture king");
-                    } else if (spaces[destX][destY].hasPiece() && onSameSide) {
-                        System.out.println("Cannot capture a piece on your side");
-                    } else {
-                        if (numMoves == 1 && cp.getSide().equals("black")) {
-                            System.out.println("White moves first");
-                        } else {
-                            if (cpMoves.contains(spaces[destX][destY].getCoordinate())) {
-                                spaces[destX][destY].setPiece(cp);
-                                spaces[sourceRow][sourceCol].setPiece(null);
-                            } else {
-                                System.out.println("Invalid move");
-                            }
-                        }
+                    // Check if destination space is occupied
+                    // Also see if the occupying piece is on the same side as the moving piece (if so, then the piece cannot
+                    // move there as it would be capturing a piece on its own side)
+                    
+                    if ((spaces[destRow][destCol].getCp() == null)
+                        || (spaces[destRow][destCol].getCp() != null && !spaces[destRow][destCol].getCp().sameSide(thisCp))
+                    ) {
+
+                        spaces[destRow][destCol].setCp(thisCp);
+                        spaces[sourceRow][sourceCol].removeCp();
                     }
 
                     repaint();
+
+                    // Switch turns between players
+                    if (whiteToMove) {
+                        whiteToMove = false;
+                        blackToMove = true;
+                    } else {
+                        whiteToMove = true;
+                        blackToMove = false;
+                    }
                 }
-            } else {
-                System.out.println("No piece to move");
             }
         }
-
-        /**
-         * The getRow method returns the row of the coordinate
-         * @param coord the coordinate of the piece
-         * @return the row of the piece
-         */
-        public int getRow(String coord) {
-            int coordX = Integer.parseInt(coord.substring(1, 2));
-
-            switch (coordX) {
-                case 8:
-                    return coordX - 8;
-                case 7:
-                    return coordX - 6;
-                case 6:
-                    return coordX - 4;
-                case 5:
-                    return coordX - 2;
-                case 4:
-                    return coordX;
-                case 3:
-                    return coordX + 2;
-                case 2:
-                    return coordX + 4;
-                case 1:
-                    return coordX + 6;
-                default:
-                    return -1;
-            }
-        }
-        
-        /**
-         * The getCol method returns the column of the coordinate
-         * @param coord the coordinate to return the column of
-         * @return the column of the coordinate
-         */
-        public int getCol(String coord) {
-            String coordY = coord.substring(0, 1);
-
-            switch (coordY) {
-                case "A":
-                    return 0;
-                case "B":
-                    return 1;
-                case "C":
-                    return 2;
-                case "D":
-                    return 3;
-                case "E":
-                    return 4;
-                case "F":
-                    return 5;
-                case "G":
-                    return 6;
-                case "H":
-                    return 7;
-                default:
-                    return -1;
-            }
-        }
-
-        /**
-         * The method setPiece sets a chess piece to a new space
-         * @param newPiece the piece to set to the space
-         */
-        public void setPiece(Piece newPiece) {
-            cp = newPiece;
-        }
-
     }
 
-    public void mouseClicked(MouseEvent evt) {
-        // code goes here
-    }
-
-    /**
-     * This method is used to move a piece when a player presses a piece and new space
-     * @param evt the event of clicking the pieces and spaces
-     */
     public void mousePressed(MouseEvent evt) {
         numClicks++;
 
-        if (numClicks % 2 == 0) {
-            endX = evt.getY() / 50;
-            endY = evt.getX() / 50;
+        if (numClicks % 2 == 1) {
+            sourceFile = (char) ((int) 'A' + evt.getX() / 50);
+            sourceRank = 8 - evt.getY() / 50;
+        } else if (numClicks % 2 == 0) {
+            destFile = (char) ((int) 'A' + evt.getX() / 50);
+            destRank = 8 - evt.getY() / 50;
 
-            if (endX == startX && endY == startY) {
-                return;
-            } else {
-                if (spaces[startX][startY].hasPiece()) {
-                    spaces[startX][startY].getPieceMoves(startX, startY);
-                    spaces[startX][startY].movePiece(endX, endY);
-                } else {
-                    System.out.println("No piece to move");
-                }
-            }
-        } else {
-            startX = evt.getY() / 50;
-            startY = evt.getX() / 50;
-
-            if (spaces[startX][startY].hasPiece()) {
-                spaces[startX][startY].getPieceMoves(startX, startY);
-                numMoves++;
-            }
+            movePiece(sourceFile, sourceRank, destFile, destRank);
         }
     }
+
+    public void mouseClicked(MouseEvent evt) {}
 
     public void mouseReleased(MouseEvent evt) {}
 
@@ -391,25 +319,33 @@ public class Board extends JComponent implements MouseListener {
 
     public void mouseExited(MouseEvent evt) {}
 
-}
+    class Space {
 
-    /*boolean borderedOnLeft = (y - 1 >= 0) && spaces[x][y - 1].hasPiece();
-    boolean borderedOnRight = (y + 1 <= 7) && spaces[x][y + 1].hasPiece();
-    boolean borderedOnTop = (x - 1 >= 0) && spaces[x - 1][y].hasPiece();
-    boolean borderedOnBottom = (x + 1 <= 7) && spaces[x + 1][y].hasPiece();
-    
-    if (cp.getType().equals("bishop") || cp.getType().equals("king")) {
-        boolean borderedLeftDiag = (x - 1 >= 0 && y - 1 >= 0) && spaces[x - 1][y - 1].hasPiece();
-        boolean borderedRightDiag = (x - 1 <= 7 && y + 1 <= 7) && spaces[x - 1][y + 1].hasPiece();
+        private int row;
+        private int col;
 
-        if (Integer.parseInt(cp.getCoordinate().substring(1, 2)) == 1 
-            && borderedOnRight && borderedOnTop && borderedOnLeft && borderedLeftDiag && borderedRightDiag
-        ) {
-            cpMoves.clear();
-        } else if (Integer.parseInt(cp.getCoordinate().substring(1, 2)) == 8 && borderedOnLeft
-        && borderedLeftDiag && borderedRightDiag) {
-            cpMoves.clear();
-        } else if (borderedOnLeft && borderedOnRight && borderedOnTop && borderedOnBottom && borderedLeftDiag && borderedRightDiag) {
-            cpMoves.clear();
+		private ChessPiece cp;
+		
+		public Space(int row, int col, ChessPiece cp) {
+            this.row = row;
+            this.col = col;
+			this.cp = cp;
+		}
+
+		public ChessPiece getCp() {
+			return cp;
+		}
+
+        public void setCp(ChessPiece newChessPiece) {
+            newChessPiece.setFile((char) ((int) 'A' + col));
+            newChessPiece.setRank(8 - row);
+            cp = newChessPiece;
         }
-    }*/
+
+        public void removeCp() {
+            cp = null;
+        }
+
+	}
+
+}

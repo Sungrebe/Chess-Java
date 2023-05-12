@@ -1,72 +1,33 @@
 import java.util.ArrayList;
 
+public class King extends ChessPiece {
+	
+	public King(char file, int rank, String side) {
+		super("king", file, rank, side);
+	}
 
-/**
-* The King class is responsible for the King chess pieces
-*/
-public class King extends Piece {
+	public ArrayList<String> getMoves() {
+		ArrayList<String> kingMoves = new ArrayList<String>();
 
-    /**
-     * the King constructor
-     * @param coordinate the coordinate of the piece
-     * @param side the side that the piece is on
-     */
-   public King(String coordinate, String side) {
-       super("king", coordinate, side);
-   }
+		// Space in front of the king
+        kingMoves.add(""+getFile() + (getRank() + 1));
 
-   /**
-    * the moves method determines what moves the King can make
-    * @return an arraylist with moves that the King can make
-    */
-   public ArrayList<String> moves() {
-       ArrayList<String> kingMoves = new ArrayList<String>();
-       //used to easily switch between column values
-       String[] column = {"A", "B", "C", "D", "E", "F", "G", "H"};
-       int coordX = Integer.parseInt(getCoordinate().substring(1, 2));
-       String coordY = getCoordinate().substring(0, 1);
-       int coordYIndex = 0;
-       //use this to find the index value corresponding to the column letter
-       for (int i = 0; i < column.length; i++){
-           if (coordY.equals(column[i])){
-               coordYIndex = i;
-           } 
-       }
+		// Space behind the king
+		kingMoves.add(""+getFile() + (getRank() - 1));
 
-       System.out.println(coordYIndex);
+		if (getRank() - 1 >= (int) 'A') {
+			kingMoves.add(""+(char) (getFile() - 1) + getRank()); // Space to the left of the king
+			kingMoves.add(""+(char) (getFile() - 1) + (getRank() + 1)); // Top left diagonal
+			kingMoves.add(""+(char) (getFile() - 1) + (getRank() - 1)); // Bottom left diagonal
+		}
 
-       System.out.println(coordY + "" + coordX);
+		if (getRank() + 1 <= (int) 'H') {
+			kingMoves.add(""+(char) (getFile() + 1) + getRank()); // Space to the right of the king
+			kingMoves.add(""+(char) (getFile() + 1) + (getRank() + 1)); // Top right diagonal
+			kingMoves.add(""+(char) (getFile() + 1) + (getRank() - 1)); // Bottom right diagonal
+		}
 
-       //the spot in front of the king
-       kingMoves.add(coordY + (coordX + 1));
-       //the spot behind the king
-       kingMoves.add(coordY + (coordX - 1));
-       
-       if (coordYIndex - 1 >= 0) {
-        //the spot to the left of the king
-       kingMoves.add(column[coordYIndex - 1] + coordX);
-        //the spot to the top left diagonal
-        kingMoves.add(column[coordYIndex - 1] + (coordX + 1));
+		return kingMoves;
+	}
 
-        //the spot to the botton left diagonal
-        kingMoves.add(column[coordYIndex - 1] + (coordX - 1));
-       }
-
-       if (coordYIndex + 1 < 8) {
-        //the spot to the right of the king
-       kingMoves.add(column[coordYIndex + 1] + coordX);
-       }
-
-       if (coordYIndex + 1 < 8) {
-        //the spot to the top right diagonal
-       kingMoves.add(column[coordYIndex + 1] + (coordX + 1));
-        //the spot to the bottom right diagonal
-        kingMoves.add(column[coordYIndex + 1] + (coordX - 1));
-       }
-
-       return kingMoves;
-   }
 }
-
-
-

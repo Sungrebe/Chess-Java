@@ -1,10 +1,7 @@
 import java.awt.*;
 import javax.swing.*;
 
-/**
- * The ChessApp class is where the chess game is run
- */
-public class ChessApp extends JFrame {
+class ChessApp extends JFrame {
 
     public ChessApp(String title) {
         super(title);
@@ -14,11 +11,11 @@ public class ChessApp extends JFrame {
     }
 
     public static void main(String[] args) {
-        ChessApp ca = new ChessApp("Java Chess Game");
-        ca.setSize(400, 428);
-        ca.setResizable(false);
-        ca.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ca.setVisible(true);
+        ChessApp cApp = new ChessApp("Java Chess Game");
+        cApp.setSize(400, 428);
+        cApp.setResizable(false);
+        cApp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        cApp.setVisible(true);
     }
 
 }
