@@ -146,34 +146,38 @@ public class Board extends JComponent implements MouseListener {
             // Pawns can move diagonally if they can capture a piece from the opposing side
             // If so, add the diagonals to the list of possible moves
             if (cp.isWhite()) {
+                // If a white pawn is bounded in front, it cannot move
+                // or two spaces in front
+                if ((cpRow - 1 >= 0 && spaces[cpRow - 1][cpCol].getCp() != null) 
+                || (cpRow - 2 >= 0 && spaces[cpRow - 2][cpCol].getCp() != null)) {
+                    System.out.println("bounded in front");
+                    cpMoves.clear();
+                } else {
+                    cpMoves = cp.getMoves();
+                }
+
                 if (cpRow - 1 >= 0 && cpCol - 1 >= 0 && spaces[cpRow - 1][cpCol - 1].getCp() != null) {
                     // If top left diagonal has a piece
                     cpMoves.add(""+(char) ((int) 'A' + cpCol - 1) + (8 - cpRow + 1));
                 } else if (cpRow - 1 >= 0 && cpCol + 1 <= 7 && spaces[cpRow - 1][cpCol + 1].getCp() != null) {
                     // If top right diagonal has a piece
                     cpMoves.add(""+(char) ((int) 'A' + cpCol + 1) + (8 - cpRow + 1));
-                } else {
-                    // If a white pawn is bounded in front, it cannot move
-                    if (cpRow - 1 >= 0 && spaces[cpRow - 1][cpCol].getCp() != null) {
-                        cpMoves.clear();
-                    } else {
-                        cpMoves = cp.getMoves();
-                    }
                 }
             } else if (cp.isBlack()) {
+                // If a black pawn is bounded below, it cannot move
+                if ((cpRow + 1 <= 7 && spaces[cpRow + 1][cpCol].getCp() != null) 
+                || (cpRow + 1 <= 7 && spaces[cpRow + 2][cpCol].getCp() != null)) {
+                    cpMoves.clear();
+                } else {
+                    cpMoves = cp.getMoves();
+                }
+                
                 if (cpRow + 1 <= 7 && cpCol - 1 >= 0 && spaces[cpRow + 1][cpCol - 1].getCp() != null) {
                     // If bottom left diagonal has a piece
                     cpMoves.add(""+(char) ((int) 'A' + cpCol - 1) + (8 - cpRow - 1));
                 } else if (cpRow + 1 <= 7 && cpCol + 1 <= 7 && spaces[cpRow + 1][cpCol + 1].getCp() != null) {
                     // If bottom right diagonal has a piece
                     cpMoves.add(""+(char) ((int) 'A' + cpCol - 1) + (8 - cpRow - 1));
-                } else {
-                    // If a black pawn is bounded below, it cannot move
-                    if (cpRow + 1 <= 7 && spaces[cpRow + 1][cpCol].getCp() != null) {
-                        cpMoves.clear();
-                    } else {
-                        cpMoves = cp.getMoves();
-                    }
                 }
             }
         } else if (!cp.isKnight()) {
@@ -209,7 +213,7 @@ public class Board extends JComponent implements MouseListener {
             if (cp.isWhite()) whiteKingPos = ""+cp.getFile() + cp.getRank();
             if (cp.isBlack()) blackKingPos = ""+cp.getFile() + cp.getRank();
 
-            System.out.println("castling valid");
+            System.out.println("castling valid " + castlingValid);
             if (castlingValid && spaces[cpRow][cpCol + 1].getCp() == null 
                 && spaces[cpRow][cpCol + 2].getCp() == null) {
                     cpMoves.add(""+(char) ((int) 'A' + cpRow) + (8 - cpCol - 2));
@@ -258,18 +262,19 @@ public class Board extends JComponent implements MouseListener {
             } else if (blackToMove && thisCp.isWhite()) {
                 System.out.println("Black to move");
             } else {
+                int destRow = 8 - destR;
+                int destCol = (int) destF - 'A';
+
+                // If the piece is a king and it is trying to move to a space that would not result in a castle, then castling cannot occur
+                // for the rest of the game
+                if ((thisCp.isKing() && destRow != sourceRow && destCol != sourceCol + 2)
+                || (thisCp.isKing() && destRow != sourceRow && destCol != sourceCol - 2)) {
+                    castlingValid = false;
+                }
+
                 ArrayList<String> validMoves = getValidMoves(sourceRow, sourceCol, thisCp);
 
                 if (validMoves.contains(""+destF + destR)) {
-                    int destRow = 8 - destR;
-                    int destCol = (int) destF - 'A';
-
-                    if ((thisCp.isKing() && destRow != sourceRow && destCol != sourceCol + 2)
-                    || (thisCp.isKing() && destRow != sourceRow && destCol != sourceCol - 2)) {
-                        castlingValid = false;
-                        System.out.println("cannot castle");
-                    }
-
                     // Check if destination space is occupied
                     // Also see if the occupying piece is on the same side as the moving piece (if so, then the piece cannot
                     // move there as it would be capturing a piece on its own side)
