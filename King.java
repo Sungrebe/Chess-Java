@@ -15,17 +15,15 @@ public class King extends ChessPiece {
 		// Space behind the king
 		kingMoves.add(""+getFile() + (getRank() - 1));
 
-		if (getRank() - 1 >= (int) 'A') {
-			kingMoves.add(""+(char) (getFile() - 1) + getRank()); // Space to the left of the king
-			kingMoves.add(""+(char) (getFile() - 1) + (getRank() + 1)); // Top left diagonal
-			kingMoves.add(""+(char) (getFile() - 1) + (getRank() - 1)); // Bottom left diagonal
-		}
+		kingMoves.add(""+(char) (getFile() - 1) + getRank()); // Space to the left of the king
+		kingMoves.add(""+(char) (getFile() - 1) + (getRank() + 1)); // Top left diagonal
+		kingMoves.add(""+(char) (getFile() - 1) + (getRank() - 1)); // Bottom left diagonal
 
-		if (getRank() + 1 <= (int) 'H') {
-			kingMoves.add(""+(char) (getFile() + 1) + getRank()); // Space to the right of the king
-			kingMoves.add(""+(char) (getFile() + 1) + (getRank() + 1)); // Top right diagonal
-			kingMoves.add(""+(char) (getFile() + 1) + (getRank() - 1)); // Bottom right diagonal
-		}
+		kingMoves.add(""+(char) (getFile() + 1) + getRank()); // Space to the right of the king
+		kingMoves.add(""+(char) (getFile() + 1) + (getRank() + 1)); // Top right diagonal
+		kingMoves.add(""+(char) (getFile() + 1) + (getRank() - 1)); // Bottom right diagonal
+
+		System.out.println(kingMoves);
 
 		return kingMoves;
 	}

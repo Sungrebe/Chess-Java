@@ -29,6 +29,9 @@ public class Board extends JComponent implements MouseListener {
     private boolean whiteCastlingValid = true;
     private boolean blackCastlingValid = true;
 
+    private boolean blackInCheck = false;
+    private boolean whiteInCheck = false;
+
     public Board() {
         spaces = new Space[8][8];
 
@@ -210,11 +213,8 @@ public class Board extends JComponent implements MouseListener {
             }
         }
 
-        // If the piece is a king, update the white king or black king pos variables
         if (cp.isKing()) {
-            if (cp.isWhite()) whiteKingPos = ""+cp.getFile() + cp.getRank();
-            if (cp.isBlack()) blackKingPos = ""+cp.getFile() + cp.getRank();
-
+            // Handle castling
             if (
                 (cp.isWhite() && whiteCastlingValid && spaces[cpRow][cpCol + 1].getCp() == null && spaces[cpRow][cpCol + 2].getCp() == null) ||
                 (cp.isBlack() && blackCastlingValid && spaces[cpRow][cpCol + 1].getCp() == null && spaces[cpRow][cpCol + 2].getCp() == null)) {
@@ -225,19 +225,12 @@ public class Board extends JComponent implements MouseListener {
                     spaces[cpRow][cpCol].removeCp();
                     spaces[cpRow][cpCol + 3].removeCp();
 
-                    // Switch turns between players
-                    if (whiteToMove) {
-                        whiteToMove = false;
-                        blackToMove = true;
-                    } else {
-                        whiteToMove = true;
-                        blackToMove = false;
-                    }
-
                     repaint();
 
                     if (cp.isWhite()) whiteCastlingValid = false;
                     if (cp.isBlack()) blackCastlingValid = false;
+
+                    switchTurns();
             } else if (
                 (cp.isWhite() && whiteCastlingValid && spaces[cpRow][cpCol - 1].getCp() == null && spaces[cpRow][cpCol - 2].getCp() == null) ||
                 (cp.isBlack() && blackCastlingValid && spaces[cpRow][cpCol - 1].getCp() == null && spaces[cpRow][cpCol - 2].getCp() == null)) {
@@ -248,40 +241,21 @@ public class Board extends JComponent implements MouseListener {
                     spaces[cpRow][cpCol].removeCp();
                     spaces[cpRow][cpCol - 4].removeCp();
 
-                    // Switch turns between players
-                    if (whiteToMove) {
-                        whiteToMove = false;
-                        blackToMove = true;
-                    } else {
-                        whiteToMove = true;
-                        blackToMove = false;
-                    }
-
                     repaint();
 
                     if (cp.isWhite()) whiteCastlingValid = false;
                     if (cp.isBlack()) blackCastlingValid = false;
-            } else {
-                cpMoves = cp.getMoves();
-            }
-        }
 
-        // Determine check
-        // If another piece's moves contain either the white king or black king pos, and that piece is on the opposite
-        // side of the king being checked, then that would be considered check
-        if (!cp.getName().equals("king")) {
-            if (cp.isBlack() && cp.getMoves().contains(whiteKingPos)
-            || cp.isWhite() && cp.getMoves().contains(blackKingPos)) {
-                System.out.println("king in check");
+                    switchTurns();
             }
         }
 
         return cpMoves;
     }
     
-    public void movePiece(char sourceF, int sourceR, char destF, int destR) {
-        int sourceRow = 8 - sourceR;
-        int sourceCol = (int) sourceF - 'A';
+    public void movePiece() {
+        int sourceRow = 8 - sourceRank;
+        int sourceCol = (int) sourceFile - 'A';
 
         if (spaces[sourceRow][sourceCol].getCp() != null) {
             ChessPiece thisCp = spaces[sourceRow][sourceCol].getCp();
@@ -291,8 +265,8 @@ public class Board extends JComponent implements MouseListener {
             } else if (blackToMove && thisCp.isWhite()) {
                 System.out.println("Black to move");
             } else {
-                int destRow = 8 - destR;
-                int destCol = (int) destF - 'A';
+                int destRow = 8 - destRank;
+                int destCol = (int) destFile - 'A';
 
                 // If the piece is a king and it is trying to move to a space that would not result in a castle, then castling cannot occur
                 // for the rest of the game
@@ -304,7 +278,7 @@ public class Board extends JComponent implements MouseListener {
 
                 ArrayList<String> validMoves = getValidMoves(sourceRow, sourceCol, thisCp);
 
-                if (validMoves.contains(""+destF + destR)) {
+                if (validMoves.contains(""+destFile + destRank)) {
                     // Check if destination space is occupied
                     // Also see if the occupying piece is on the same side as the moving piece (if so, then the piece cannot
                     // move there as it would be capturing a piece on its own side)
@@ -312,21 +286,50 @@ public class Board extends JComponent implements MouseListener {
                     if ((spaces[destRow][destCol].getCp() == null)
                         || (spaces[destRow][destCol].getCp() != null && !spaces[destRow][destCol].getCp().sameSide(thisCp))
                     ) {
-
                         spaces[destRow][destCol].setCp(thisCp);
                         spaces[sourceRow][sourceCol].removeCp();
+
+                        if (thisCp.isKing() && thisCp.isWhite()) whiteKingPos = ""+destFile + destRank;
+                        if (thisCp.isKing() && thisCp.isBlack()) blackKingPos = ""+destFile + destRank;
                     }
 
                     repaint();
 
                     // Switch turns between players
-                    if (whiteToMove) {
-                        whiteToMove = false;
-                        blackToMove = true;
-                    } else {
-                        whiteToMove = true;
-                        blackToMove = false;
-                    }
+                    switchTurns();
+                }
+            }
+        }
+    }
+
+    private void switchTurns() {
+        if (whiteToMove) {
+            whiteToMove = false;
+            blackToMove = true;
+        } else {
+            whiteToMove = true;
+            blackToMove = false;
+        }
+    }
+
+    private void isCausingCheck(char sourceF, int sourceR) {
+        // If another piece's moves contain either the white king or black king pos, and that piece is on the opposite
+        // side of the king being checked, then that would be considered check
+        ChessPiece aCp = spaces[8 - sourceR][(int) sourceF - 'A'].getCp();
+
+        if (aCp != null && !aCp.isKing()) {
+            if (aCp.isBlack()) {
+                System.out.println(aCp.getMoves().contains(whiteKingPos));
+                if (aCp.getMoves().contains(whiteKingPos)) {
+                    whiteInCheck = true;
+                } else {
+                    whiteInCheck = false;
+                }
+            } else if (aCp.isWhite()) {
+                if (aCp.getMoves().contains(blackKingPos)) {
+                    blackInCheck = true;
+                } else {
+                    blackInCheck = false;
                 }
             }
         }
@@ -344,7 +347,20 @@ public class Board extends JComponent implements MouseListener {
             destFile = (char) ((int) 'A' + evt.getX() / 50);
             destRank = 8 - evt.getY() / 50;
 
-            movePiece(sourceFile, sourceRank, destFile, destRank);
+            if (whiteInCheck) {
+                isCausingCheck(destFile, destRank);
+
+                System.out.println("white in check: " + whiteInCheck);
+                
+                if (whiteInCheck) {
+                    System.out.println("white, move out of check");
+                } else {
+                    movePiece();
+                }
+            } else {
+                movePiece();
+                isCausingCheck(destFile, destRank);
+            }
         } else if (numClicks % 3 == 0) {
             // If the number of clicks is divisible by three, then reset the click count to 0 (so that the user can make a second move)
             numClicks = 0;
