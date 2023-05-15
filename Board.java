@@ -1,3 +1,4 @@
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -12,7 +13,6 @@ public class Board extends JComponent implements MouseListener {
     private boolean whiteToMove;
     private boolean blackToMove;
 
-    // Get the current positions of the white king and the black king (to determine check and checkmate)
     private String whiteKingPos;
     private String blackKingPos;
 
@@ -42,76 +42,76 @@ public class Board extends JComponent implements MouseListener {
         blackKingPos = "E8";
 
         spaces[0][0] = new Space(0, 0, new Rook('A', 8, "black"));
-		spaces[0][1] = new Space(0, 1, new Knight('B', 8, "black"));
-		spaces[0][2] = new Space(0, 2, new Bishop('C', 8, "black"));
-		spaces[0][3] = new Space(0, 3, new Queen('D', 8, "black"));
-		spaces[0][4] = new Space(0, 4, new King('E', 8, "black"));
-		spaces[0][5] = new Space(0, 5, new Bishop('F', 8, "black"));
-		spaces[0][6] = new Space(0, 6, new Knight('G', 8, "black"));
-		spaces[0][7] = new Space(0, 7, new Rook('H', 8, "black"));
+        spaces[0][1] = new Space(0, 1, new Knight('B', 8, "black"));
+        spaces[0][2] = new Space(0, 2, new Bishop('C', 8, "black"));
+        spaces[0][3] = new Space(0, 3, new Queen('D', 8, "black"));
+        spaces[0][4] = new Space(0, 4, new King('E', 8, "black"));
+        spaces[0][5] = new Space(0, 5, new Bishop('F', 8, "black"));
+        spaces[0][6] = new Space(0, 6, new Knight('G', 8, "black"));
+        spaces[0][7] = new Space(0, 7, new Rook('H', 8, "black"));
 
         spaces[1][0] = new Space(1, 0, new Pawn('A', 7, "black"));
-		spaces[1][1] = new Space(1, 1, new Pawn('B', 7, "black"));
-		spaces[1][2] = new Space(1, 2, new Pawn('C', 7, "black"));
-		spaces[1][3] = new Space(1, 3, new Pawn('D', 7, "black"));
-		spaces[1][4] = new Space(1, 4, new Pawn('E', 7, "black"));
-		spaces[1][5] = new Space(1, 5, new Pawn('F', 7, "black"));
-		spaces[1][6] = new Space(1, 6, new Pawn('G', 7, "black"));
-		spaces[1][7] = new Space(1, 7, new Pawn('H', 7, "black"));
+        spaces[1][1] = new Space(1, 1, new Pawn('B', 7, "black"));
+        spaces[1][2] = new Space(1, 2, new Pawn('C', 7, "black"));
+        spaces[1][3] = new Space(1, 3, new Pawn('D', 7, "black"));
+        spaces[1][4] = new Space(1, 4, new Pawn('E', 7, "black"));
+        spaces[1][5] = new Space(1, 5, new Pawn('F', 7, "black"));
+        spaces[1][6] = new Space(1, 6, new Pawn('G', 7, "black"));
+        spaces[1][7] = new Space(1, 7, new Pawn('H', 7, "black"));
 
         spaces[2][0] = new Space(2, 0, null);
-		spaces[2][1] = new Space(2, 1, null);
-		spaces[2][2] = new Space(2, 2, null);
-		spaces[2][3] = new Space(2, 3, null);
-		spaces[2][4] = new Space(2, 4, null);
-		spaces[2][5] = new Space(2, 5, null);
-		spaces[2][6] = new Space(2, 6, null);
-		spaces[2][7] = new Space(2, 7, null);
+        spaces[2][1] = new Space(2, 1, null);
+        spaces[2][2] = new Space(2, 2, null);
+        spaces[2][3] = new Space(2, 3, null);
+        spaces[2][4] = new Space(2, 4, null);
+        spaces[2][5] = new Space(2, 5, null);
+        spaces[2][6] = new Space(2, 6, null);
+        spaces[2][7] = new Space(2, 7, null);
 
-		spaces[3][0] = new Space(3, 0, null);
-		spaces[3][1] = new Space(3, 1, null);
-		spaces[3][2] = new Space(3, 2, null);
-		spaces[3][3] = new Space(3, 3, null);
-		spaces[3][4] = new Space(3, 4, null);
-		spaces[3][5] = new Space(3, 5, null);
-		spaces[3][6] = new Space(3, 6, null);
-		spaces[3][7] = new Space(3, 7, null);
+        spaces[3][0] = new Space(3, 0, null);
+        spaces[3][1] = new Space(3, 1, null);
+        spaces[3][2] = new Space(3, 2, null);
+        spaces[3][3] = new Space(3, 3, null);
+        spaces[3][4] = new Space(3, 4, null);
+        spaces[3][5] = new Space(3, 5, null);
+        spaces[3][6] = new Space(3, 6, null);
+        spaces[3][7] = new Space(3, 7, null);
 
-		spaces[4][0] = new Space(4, 0, null);
-		spaces[4][1] = new Space(4, 1, null);
-		spaces[4][2] = new Space(4, 2, null);
-		spaces[4][3] = new Space(4, 3, null);
-		spaces[4][4] = new Space(4, 4, null);
-		spaces[4][5] = new Space(4, 5, null);
-		spaces[4][6] = new Space(4, 6, null);
-		spaces[4][7] = new Space(4, 7, null);
+        spaces[4][0] = new Space(4, 0, null);
+        spaces[4][1] = new Space(4, 1, null);
+        spaces[4][2] = new Space(4, 2, null);
+        spaces[4][3] = new Space(4, 3, null);
+        spaces[4][4] = new Space(4, 4, null);
+        spaces[4][5] = new Space(4, 5, null);
+        spaces[4][6] = new Space(4, 6, null);
+        spaces[4][7] = new Space(4, 7, null);
 
-		spaces[5][0] = new Space(5, 0, null);
-		spaces[5][1] = new Space(5, 1, null);
-		spaces[5][2] = new Space(5, 2, null);
-		spaces[5][3] = new Space(5, 3, null);
-		spaces[5][4] = new Space(5, 4, null);
-		spaces[5][5] = new Space(5, 5, null);
-		spaces[5][6] = new Space(5, 6, null);
-		spaces[5][7] = new Space(5, 7, null);
+        spaces[5][0] = new Space(5, 0, null);
+        spaces[5][1] = new Space(5, 1, null);
+        spaces[5][2] = new Space(5, 2, null);
+        spaces[5][3] = new Space(5, 3, null);
+        spaces[5][4] = new Space(5, 4, null);
+        spaces[5][5] = new Space(5, 5, null);
+        spaces[5][6] = new Space(5, 6, null);
+        spaces[5][7] = new Space(5, 7, null);
 
         spaces[6][0] = new Space(6, 0, new Pawn('A', 2, "white"));
-		spaces[6][1] = new Space(6, 1, new Pawn('B', 2, "white"));
-		spaces[6][2] = new Space(6, 2, new Pawn('C', 2, "white"));
-		spaces[6][3] = new Space(6, 3, new Pawn('D', 2, "white"));
-		spaces[6][4] = new Space(6, 4, new Pawn('E', 2, "white"));
-		spaces[6][5] = new Space(6, 5, new Pawn('F', 2, "white"));
-		spaces[6][6] = new Space(6, 6, new Pawn('G', 2, "white"));
-		spaces[6][7] = new Space(6, 7, new Pawn('H', 2, "white"));
+        spaces[6][1] = new Space(6, 1, new Pawn('B', 2, "white"));
+        spaces[6][2] = new Space(6, 2, new Pawn('C', 2, "white"));
+        spaces[6][3] = new Space(6, 3, new Pawn('D', 2, "white"));
+        spaces[6][4] = new Space(6, 4, new Pawn('E', 2, "white"));
+        spaces[6][5] = new Space(6, 5, new Pawn('F', 2, "white"));
+        spaces[6][6] = new Space(6, 6, new Pawn('G', 2, "white"));
+        spaces[6][7] = new Space(6, 7, new Pawn('H', 2, "white"));
 
-		spaces[7][0] = new Space(7, 0, new Rook('A', 1, "white"));
-		spaces[7][1] = new Space(7, 1, new Knight('B', 1, "white"));
-		spaces[7][2] = new Space(7, 2, new Bishop('C', 1, "white"));
-		spaces[7][3] = new Space(7, 3, new Queen('D', 1, "white"));
-		spaces[7][4] = new Space(7, 4, new King('E', 1, "white"));
-		spaces[7][5] = new Space(7, 5, new Bishop('F', 1, "white"));
-		spaces[7][6] = new Space(7, 6, new Knight('G', 1, "white"));
-		spaces[7][7] = new Space(7, 7, new Rook('H', 1, "white"));
+        spaces[7][0] = new Space(7, 0, new Rook('A', 1, "white"));
+        spaces[7][1] = new Space(7, 1, new Knight('B', 1, "white"));
+        spaces[7][2] = new Space(7, 2, new Bishop('C', 1, "white"));
+        spaces[7][3] = new Space(7, 3, new Queen('D', 1, "white"));
+        spaces[7][4] = new Space(7, 4, new King('E', 1, "white"));
+        spaces[7][5] = new Space(7, 5, new Bishop('F', 1, "white"));
+        spaces[7][6] = new Space(7, 6, new Knight('G', 1, "white"));
+        spaces[7][7] = new Space(7, 7, new Rook('H', 1, "white"));
 
         addMouseListener(this);
     }
@@ -123,19 +123,17 @@ public class Board extends JComponent implements MouseListener {
 
         for (int row = 0; row < spaces.length; row++) {
             for (int col = 0; col < spaces[0].length; col++) {
-                if (row % 2 == 0) {
-                    if (col % 2 == 0) g2d.setColor(Color.decode("#F0E68C"));
-                    if (col % 2 != 0) g2d.setColor(Color.decode("#98BF64"));
+                if ((row + col) % 2 == 0) {
+                    g2d.setColor(Color.decode("#F0E68C"));
                 } else {
-                    if (col % 2 == 0) g2d.setColor(Color.decode("#98BF64"));
-                    if (col % 2 != 0) g2d.setColor(Color.decode("#F0E68C"));
+                    g2d.setColor(Color.decode("#98BF64"));
                 }
             
                 g2d.fillRect(col * 50, row * 50, 50, 50);
 
                 if (spaces[row][col].getCp() != null) {
                     ChessPiece c = spaces[row][col].getCp();
-                    Image cpImg = Toolkit.getDefaultToolkit().getImage("assets/" + c.getName() + " " + c.getSide() + ".png");
+                    Image cpImg = Toolkit.getDefaultToolkit().getImage("assets/" + c.getSide() + " " + c.getName() + ".png");
 
                     g2d.drawImage(cpImg, 2 + col * 50, 3 + row * 50, 45, 45, new Color(0f, 0f, 0f, 0), this);
                 }
@@ -155,7 +153,6 @@ public class Board extends JComponent implements MouseListener {
                 // or two spaces in front
                 if ((cpRow - 1 >= 0 && spaces[cpRow - 1][cpCol].getCp() != null) 
                 || (!p.hasMoved() && cpRow - 2 >= 0 && spaces[cpRow - 2][cpCol].getCp() != null)) {
-                    System.out.println("bounded in front");
                     cpMoves.clear();
                 } else {
                     cpMoves = p.getMoves();
@@ -182,7 +179,7 @@ public class Board extends JComponent implements MouseListener {
                     cpMoves.add(""+(char) ((int) 'A' + cpCol - 1) + (8 - cpRow - 1));
                 } else if (cpRow + 1 <= 7 && cpCol + 1 <= 7 && spaces[cpRow + 1][cpCol + 1].getCp() != null) {
                     // If bottom right diagonal has a piece
-                    cpMoves.add(""+(char) ((int) 'A' + cpCol - 1) + (8 - cpRow - 1));
+                    cpMoves.add(""+(char) ((int) 'A' + cpCol + 1) + (8 - cpRow - 1));
                 }
             }
         } else if (!cp.isKnight()) {
@@ -252,8 +249,39 @@ public class Board extends JComponent implements MouseListener {
 
         return cpMoves;
     }
-    
+
+    private void isCausingCheck(char sourceF, int sourceR) {
+        // If another piece's moves contain either the white king or black king pos, and that piece is on the opposite
+        // side of the king being checked, then that would be considered check
+        ChessPiece aCp = spaces[8 - sourceR][(int) sourceF - 'A'].getCp();
+
+        if (aCp != null && aCp.isWhite() && aCp.isKing()) {
+            whiteInCheck = false;
+        } else if (aCp != null && aCp.isBlack() && aCp.isKing()) {
+            blackInCheck = false;
+        }
+
+        if (aCp != null && !aCp.isKing()) {
+            if (aCp.isBlack()) {
+                if (aCp.getMoves().contains(whiteKingPos)) {
+                    whiteInCheck = true;
+                    System.out.println("white in check: " + whiteInCheck);
+                } else {
+                    whiteInCheck = false;
+                }
+            } else if (aCp.isWhite()) {
+                if (aCp.getMoves().contains(blackKingPos)) {
+                    blackInCheck = true;
+                } else {
+                    blackInCheck = false;
+                }
+            }
+        }
+    }
+
     public void movePiece() {
+        isCausingCheck(destFile, destRank);
+
         int sourceRow = 8 - sourceRank;
         int sourceCol = (int) sourceFile - 'A';
 
@@ -261,9 +289,9 @@ public class Board extends JComponent implements MouseListener {
             ChessPiece thisCp = spaces[sourceRow][sourceCol].getCp();
 
             if (whiteToMove && thisCp.isBlack()) {
-                System.out.println("White to move");
+                JOptionPane.showMessageDialog(null, "White to move");
             } else if (blackToMove && thisCp.isWhite()) {
-                System.out.println("Black to move");
+                JOptionPane.showMessageDialog(null, "Black to move");
             } else {
                 int destRow = 8 - destRank;
                 int destCol = (int) destFile - 'A';
@@ -282,21 +310,21 @@ public class Board extends JComponent implements MouseListener {
                     // Check if destination space is occupied
                     // Also see if the occupying piece is on the same side as the moving piece (if so, then the piece cannot
                     // move there as it would be capturing a piece on its own side)
-                    
-                    if ((spaces[destRow][destCol].getCp() == null)
+
+                    if (!whiteInCheck) {
+                        if ((spaces[destRow][destCol].getCp() == null)
                         || (spaces[destRow][destCol].getCp() != null && !spaces[destRow][destCol].getCp().sameSide(thisCp))
-                    ) {
-                        spaces[destRow][destCol].setCp(thisCp);
-                        spaces[sourceRow][sourceCol].removeCp();
+                        ) {
+                
+                            spaces[destRow][destCol].setCp(thisCp);
+                            spaces[sourceRow][sourceCol].removeCp();
+                        }
 
-                        if (thisCp.isKing() && thisCp.isWhite()) whiteKingPos = ""+destFile + destRank;
-                        if (thisCp.isKing() && thisCp.isBlack()) blackKingPos = ""+destFile + destRank;
+                        repaint();
+
+                        // Switch turns between players
+                        switchTurns();
                     }
-
-                    repaint();
-
-                    // Switch turns between players
-                    switchTurns();
                 }
             }
         }
@@ -312,29 +340,6 @@ public class Board extends JComponent implements MouseListener {
         }
     }
 
-    private void isCausingCheck(char sourceF, int sourceR) {
-        // If another piece's moves contain either the white king or black king pos, and that piece is on the opposite
-        // side of the king being checked, then that would be considered check
-        ChessPiece aCp = spaces[8 - sourceR][(int) sourceF - 'A'].getCp();
-
-        if (aCp != null && !aCp.isKing()) {
-            if (aCp.isBlack()) {
-                System.out.println(aCp.getMoves().contains(whiteKingPos));
-                if (aCp.getMoves().contains(whiteKingPos)) {
-                    whiteInCheck = true;
-                } else {
-                    whiteInCheck = false;
-                }
-            } else if (aCp.isWhite()) {
-                if (aCp.getMoves().contains(blackKingPos)) {
-                    blackInCheck = true;
-                } else {
-                    blackInCheck = false;
-                }
-            }
-        }
-    }
-
     public void mousePressed(MouseEvent evt) {
         numClicks++;
 
@@ -347,15 +352,25 @@ public class Board extends JComponent implements MouseListener {
             destFile = (char) ((int) 'A' + evt.getX() / 50);
             destRank = 8 - evt.getY() / 50;
 
-            if (whiteInCheck) {
-                isCausingCheck(destFile, destRank);
+            if (spaces[8 - sourceRank][(int) sourceFile - 'A'].getCp() != null && 
+                spaces[8 - sourceRank][(int) sourceFile - 'A'].getCp().isKing()) {
+                    if (spaces[8 - sourceRank][(int) sourceFile - 'A'].getCp().isWhite()) {
+                        whiteKingPos = ""+destFile + destRank;
+                    } else if (spaces[8 - sourceRank][(int) sourceFile - 'A'].getCp().isBlack()) {
+                        blackKingPos = ""+destFile + destRank;
+                    }
+            }
 
-                System.out.println("white in check: " + whiteInCheck);
-                
-                if (whiteInCheck) {
-                    System.out.println("white, move out of check");
+            if (whiteInCheck) {
+                if (!whiteInCheck) {
+                    whiteToMove = false;
+                    blackToMove = true;
                 } else {
-                    movePiece();
+                    JOptionPane.showMessageDialog(null, "White in check");
+                    isCausingCheck(sourceFile, sourceRank);
+
+                    whiteToMove = true;
+                    blackToMove = false;
                 }
             } else {
                 movePiece();
@@ -380,17 +395,17 @@ public class Board extends JComponent implements MouseListener {
         private int row;
         private int col;
 
-		private ChessPiece cp;
-		
-		public Space(int row, int col, ChessPiece cp) {
+        private ChessPiece cp;
+        
+        public Space(int row, int col, ChessPiece cp) {
             this.row = row;
             this.col = col;
-			this.cp = cp;
-		}
+            this.cp = cp;
+        }
 
-		public ChessPiece getCp() {
-			return cp;
-		}
+        public ChessPiece getCp() {
+            return cp;
+        }
 
         public void setCp(ChessPiece newChessPiece) {
             newChessPiece.setFile((char) ((int) 'A' + col));
@@ -402,6 +417,6 @@ public class Board extends JComponent implements MouseListener {
             cp = null;
         }
 
-	}
+    }
 
 }

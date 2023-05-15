@@ -23,8 +23,6 @@ public class King extends ChessPiece {
 		kingMoves.add(""+(char) (getFile() + 1) + (getRank() + 1)); // Top right diagonal
 		kingMoves.add(""+(char) (getFile() + 1) + (getRank() - 1)); // Bottom right diagonal
 
-		System.out.println(kingMoves);
-
 		return kingMoves;
 	}
 
