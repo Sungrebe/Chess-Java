@@ -6,7 +6,10 @@ public class Pawn extends ChessPiece {
 		super("pawn", file, rank, side);
 	}
 	
-	/*
+	/**
+	* checks if the piece has moved and if it has it returns true
+	* @param none
+	* @return boolean
 	*/
 	public boolean hasMoved() {
 		return (isBlack() && getRank() != 2) || (isWhite() && getRank() != 7);
