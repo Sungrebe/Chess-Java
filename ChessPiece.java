@@ -14,6 +14,11 @@ public abstract class ChessPiece {
 		this.side = side;
 	}
 
+	/** 
+	* 
+	* @param none
+	* @return name - 
+	*/
 	public String getName() {
 		return name;
 	}
