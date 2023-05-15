@@ -5,7 +5,9 @@ public class Pawn extends ChessPiece {
 	public Pawn(char file, int rank, String side) {
 		super("pawn", file, rank, side);
 	}
-
+	
+	/*
+	*/
 	public boolean hasMoved() {
 		return (isBlack() && getRank() != 2) || (isWhite() && getRank() != 7);
 	}
