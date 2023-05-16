@@ -161,7 +161,9 @@ public class Board extends JComponent implements MouseListener {
                 if (cpRow - 1 >= 0 && cpCol - 1 >= 0 && spaces[cpRow - 1][cpCol - 1].getCp() != null) {
                     // If top left diagonal has a piece
                     cpMoves.add(""+(char) ((int) 'A' + cpCol - 1) + (8 - cpRow + 1));
-                } else if (cpRow - 1 >= 0 && cpCol + 1 <= 7 && spaces[cpRow - 1][cpCol + 1].getCp() != null) {
+                }
+                
+                if (cpRow - 1 >= 0 && cpCol + 1 <= 7 && spaces[cpRow - 1][cpCol + 1].getCp() != null) {
                     // If top right diagonal has a piece
                     cpMoves.add(""+(char) ((int) 'A' + cpCol + 1) + (8 - cpRow + 1));
                 }
@@ -177,7 +179,9 @@ public class Board extends JComponent implements MouseListener {
                 if (cpRow + 1 <= 7 && cpCol - 1 >= 0 && spaces[cpRow + 1][cpCol - 1].getCp() != null) {
                     // If bottom left diagonal has a piece
                     cpMoves.add(""+(char) ((int) 'A' + cpCol - 1) + (8 - cpRow - 1));
-                } else if (cpRow + 1 <= 7 && cpCol + 1 <= 7 && spaces[cpRow + 1][cpCol + 1].getCp() != null) {
+                }
+                
+                if (cpRow + 1 <= 7 && cpCol + 1 <= 7 && spaces[cpRow + 1][cpCol + 1].getCp() != null) {
                     // If bottom right diagonal has a piece
                     cpMoves.add(""+(char) ((int) 'A' + cpCol + 1) + (8 - cpRow - 1));
                 }
@@ -212,6 +216,9 @@ public class Board extends JComponent implements MouseListener {
 
         if (cp.isKing()) {
             // Handle castling
+            System.out.println("white can castle: " + whiteCastlingValid);
+            System.out.println("black can castle: " + blackCastlingValid);
+
             if (
                 (cp.isWhite() && whiteCastlingValid && spaces[cpRow][cpCol + 1].getCp() == null && spaces[cpRow][cpCol + 2].getCp() == null) ||
                 (cp.isBlack() && blackCastlingValid && spaces[cpRow][cpCol + 1].getCp() == null && spaces[cpRow][cpCol + 2].getCp() == null)) {
@@ -298,10 +305,23 @@ public class Board extends JComponent implements MouseListener {
 
                 // If the piece is a king and it is trying to move to a space that would not result in a castle, then castling cannot occur
                 // for the rest of the game
+
                 if ((thisCp.isKing() && destRow != sourceRow && destCol != sourceCol + 2)
                 || (thisCp.isKing() && destRow != sourceRow && destCol != sourceCol - 2)) {
                     if (thisCp.isWhite()) whiteCastlingValid = false;
                     if (thisCp.isBlack()) blackCastlingValid = false;
+                } 
+
+                if (destRow == sourceRow && destCol > sourceCol) {
+                    if ((thisCp.isKing() && destRow == sourceRow && destCol != sourceCol + 2)) {
+                        if (thisCp.isWhite()) whiteCastlingValid = false;
+                        if (thisCp.isBlack()) blackCastlingValid = false;
+                    }    
+                } else if (destRow == sourceRow && destCol < sourceCol) {
+                    if ((thisCp.isKing() && destRow == sourceRow && destCol != sourceCol - 2)) {
+                        if (thisCp.isWhite()) whiteCastlingValid = false;
+                        if (thisCp.isBlack()) blackCastlingValid = false;
+                    }    
                 }
 
                 ArrayList<String> validMoves = getValidMoves(sourceRow, sourceCol, thisCp);
@@ -318,6 +338,16 @@ public class Board extends JComponent implements MouseListener {
                 
                             spaces[destRow][destCol].setCp(thisCp);
                             spaces[sourceRow][sourceCol].removeCp();
+
+                            if (whiteToMove) {
+                                whiteToMove = true;
+                                blackToMove = false;
+                            }
+
+                            if (blackToMove) {
+                                blackToMove = true;
+                                whiteToMove = false;
+                            }
                         }
 
                         repaint();
@@ -361,16 +391,34 @@ public class Board extends JComponent implements MouseListener {
                     }
             }
 
-            if (whiteInCheck) {
-                if (!whiteInCheck) {
-                    whiteToMove = false;
-                    blackToMove = true;
-                } else {
-                    JOptionPane.showMessageDialog(null, "White in check");
-                    isCausingCheck(sourceFile, sourceRank);
+            System.out.println(whiteCastlingValid);
+            System.out.println(blackCastlingValid);
 
-                    whiteToMove = true;
-                    blackToMove = false;
+            if (whiteInCheck || blackInCheck) {
+                if (whiteInCheck) {
+                    if (!whiteInCheck) {
+                        whiteToMove = false;
+                        blackToMove = true;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "White in check");
+                        isCausingCheck(sourceFile, sourceRank);
+    
+                        whiteToMove = true;
+                        blackToMove = false;
+                    }
+                }
+    
+                if (blackInCheck) {
+                    if (!blackInCheck) {
+                        whiteToMove = true;
+                        blackToMove = false;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Black in check");
+                        isCausingCheck(sourceFile, sourceRank);
+    
+                        whiteToMove = false;
+                        blackToMove = true;
+                    }
                 }
             } else {
                 movePiece();
