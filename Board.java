@@ -216,9 +216,6 @@ public class Board extends JComponent implements MouseListener {
 
         if (cp.isKing()) {
             // Handle castling
-            System.out.println("white can castle: " + whiteCastlingValid);
-            System.out.println("black can castle: " + blackCastlingValid);
-
             if (
                 (cp.isWhite() && whiteCastlingValid && spaces[cpRow][cpCol + 1].getCp() == null && spaces[cpRow][cpCol + 2].getCp() == null) ||
                 (cp.isBlack() && blackCastlingValid && spaces[cpRow][cpCol + 1].getCp() == null && spaces[cpRow][cpCol + 2].getCp() == null)) {
@@ -253,6 +250,187 @@ public class Board extends JComponent implements MouseListener {
                     switchTurns();
             }
         }
+
+        // Bishops and queens are bounded diagonally (they cannot jump over pieces that are blocking the diagonal)
+        if (cp.isBishop() || cp.isQueen()) {
+                if (cp.isBishop()) {
+                    Bishop b = (Bishop) cp;
+
+                ArrayList<String> firstDiagMoves = b.getDiagonal1Moves();
+                ArrayList<String> secondDiagMoves = b.getDiagonal2Moves();
+                ArrayList<String> thirdDiagMoves = b.getDiagonal3Moves();
+                ArrayList<String> fourthDiagMoves = b.getDiagonal4Moves();
+
+                int firstBlockedDiag1 = firstDiagMoves.size() - 1;
+                int firstBlockedDiag2 = secondDiagMoves.size() - 1;
+                int firstBlockedDiag3 = thirdDiagMoves.size() - 1;
+                int firstBlockedDiag4 = fourthDiagMoves.size() - 1;
+
+                for (int i = 0; i < firstDiagMoves.size(); i++) {
+                    String diag1Coord = firstDiagMoves.get(i);
+                    char diag1CoordFile = diag1Coord.charAt(0);
+                    int diag1CoordRank = Integer.parseInt(diag1Coord, 1, 2, 10);
+
+                    if (spaces[8 - diag1CoordRank][(int) diag1CoordFile - 'A'].getCp() != null) {
+                        firstBlockedDiag1 = i;
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < secondDiagMoves.size(); i++) {
+                    String diag2Coord = secondDiagMoves.get(i);
+                    char diag2CoordFile = diag2Coord.charAt(0);
+                    int diag2CoordRank = Integer.parseInt(diag2Coord, 1, 2, 10);
+
+                    if (spaces[8 - diag2CoordRank][(int) diag2CoordFile - 'A'].getCp() != null) {
+                        firstBlockedDiag2 = i;
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < thirdDiagMoves.size(); i++) {
+                    String diag3Coord = thirdDiagMoves.get(i);
+                    char diag3CoordFile = diag3Coord.charAt(0);
+                    int diag3CoordRank = Integer.parseInt(diag3Coord, 1, 2, 10);
+
+                    if (spaces[8 - diag3CoordRank][(int) diag3CoordFile - 'A'].getCp() != null) {
+                        firstBlockedDiag3 = i;
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < fourthDiagMoves.size(); i++) {
+                    String diag4Coord = fourthDiagMoves.get(i);
+                    char diag4CoordFile = diag4Coord.charAt(0);
+                    int diag4CoordRank = Integer.parseInt(diag4Coord, 1, 2, 10);
+
+                    if (spaces[8 - diag4CoordRank][(int) diag4CoordFile - 'A'].getCp() != null) {
+                        firstBlockedDiag4 = i;
+                        break;
+                    }
+                }
+
+                for (int i = firstDiagMoves.size() - 1; i >= firstBlockedDiag1 + 1; i--) {
+                    firstDiagMoves.remove(i);
+                }
+
+                for (int i = secondDiagMoves.size() - 1; i >= firstBlockedDiag2 + 1; i--) {
+                    secondDiagMoves.remove(i);
+                }
+
+                for (int i = thirdDiagMoves.size() - 1; i >= firstBlockedDiag3 + 1; i--) {
+                    thirdDiagMoves.remove(i);
+                }
+
+                for (int i = fourthDiagMoves.size() - 1; i >= firstBlockedDiag4 + 1; i--) {
+                    fourthDiagMoves.remove(i);
+                }
+
+                cpMoves.clear();
+                
+                if (cp.getMoves().containsAll(firstDiagMoves))
+                    cpMoves.addAll(firstDiagMoves);
+                
+                if (cp.getMoves().containsAll(secondDiagMoves))
+                    cpMoves.addAll(secondDiagMoves);
+                    
+                if (cp.getMoves().containsAll(thirdDiagMoves))
+                    cpMoves.addAll(thirdDiagMoves);
+                
+                if (cp.getMoves().containsAll(fourthDiagMoves))
+                    cpMoves.addAll(fourthDiagMoves);
+            }
+
+            if (cp.isQueen()) {
+                Queen q = (Queen) cp;
+
+                ArrayList<String> firstDiagMoves = q.getDiagonal1Moves();
+                ArrayList<String> secondDiagMoves = q.getDiagonal2Moves();
+                ArrayList<String> thirdDiagMoves = q.getDiagonal3Moves();
+                ArrayList<String> fourthDiagMoves = q.getDiagonal4Moves();
+
+                int firstBlockedDiag1 = firstDiagMoves.size() - 1;
+                int firstBlockedDiag2 = secondDiagMoves.size() - 1;
+                int firstBlockedDiag3 = thirdDiagMoves.size() - 1;
+                int firstBlockedDiag4 = fourthDiagMoves.size() - 1;
+
+                for (int i = 0; i < firstDiagMoves.size(); i++) {
+                    String diag1Coord = firstDiagMoves.get(i);
+                    char diag1CoordFile = diag1Coord.charAt(0);
+                    int diag1CoordRank = Integer.parseInt(diag1Coord, 1, 2, 10);
+
+                    if (spaces[8 - diag1CoordRank][(int) diag1CoordFile - 'A'].getCp() != null) {
+                        firstBlockedDiag1 = i;
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < secondDiagMoves.size(); i++) {
+                    String diag2Coord = secondDiagMoves.get(i);
+                    char diag2CoordFile = diag2Coord.charAt(0);
+                    int diag2CoordRank = Integer.parseInt(diag2Coord, 1, 2, 10);
+
+                    if (spaces[8 - diag2CoordRank][(int) diag2CoordFile - 'A'].getCp() != null) {
+                        firstBlockedDiag2 = i;
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < thirdDiagMoves.size(); i++) {
+                    String diag3Coord = thirdDiagMoves.get(i);
+                    char diag3CoordFile = diag3Coord.charAt(0);
+                    int diag3CoordRank = Integer.parseInt(diag3Coord, 1, 2, 10);
+
+                    if (spaces[8 - diag3CoordRank][(int) diag3CoordFile - 'A'].getCp() != null) {
+                        firstBlockedDiag3 = i;
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < fourthDiagMoves.size(); i++) {
+                    String diag4Coord = fourthDiagMoves.get(i);
+                    char diag4CoordFile = diag4Coord.charAt(0);
+                    int diag4CoordRank = Integer.parseInt(diag4Coord, 1, 2, 10);
+
+                    if (spaces[8 - diag4CoordRank][(int) diag4CoordFile - 'A'].getCp() != null) {
+                        firstBlockedDiag4 = i;
+                        break;
+                    }
+                }
+
+                for (int i = firstDiagMoves.size() - 1; i >= firstBlockedDiag1 + 1; i--) {
+                    firstDiagMoves.remove(i);
+                }
+
+                for (int i = secondDiagMoves.size() - 1; i >= firstBlockedDiag2 + 1; i--) {
+                    secondDiagMoves.remove(i);
+                }
+
+                for (int i = thirdDiagMoves.size() - 1; i >= firstBlockedDiag3 + 1; i--) {
+                    thirdDiagMoves.remove(i);
+                }
+
+                for (int i = fourthDiagMoves.size() - 1; i >= firstBlockedDiag4 + 1; i--) {
+                    fourthDiagMoves.remove(i);
+                }
+
+                cpMoves.clear();
+                
+                if (cp.getMoves().containsAll(firstDiagMoves))
+                    cpMoves.addAll(firstDiagMoves);
+                
+                if (cp.getMoves().containsAll(secondDiagMoves))
+                    cpMoves.addAll(secondDiagMoves);
+                    
+                if (cp.getMoves().containsAll(thirdDiagMoves))
+                    cpMoves.addAll(thirdDiagMoves);
+                
+                if (cp.getMoves().containsAll(fourthDiagMoves))
+                    cpMoves.addAll(fourthDiagMoves);
+            }
+        }
+
+        
 
         return cpMoves;
     }
