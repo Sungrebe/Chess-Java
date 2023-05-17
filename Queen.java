@@ -32,8 +32,10 @@ public class Queen extends ChessPiece {
 	public ArrayList<String> getMoves() {
 		ArrayList<String> queenMoves = new ArrayList<String>();
 
-		queenMoves.addAll(b.getMoves());
 		queenMoves.addAll(r.getMoves());
+		queenMoves.addAll(b.getMoves());
+
+		System.out.println(queenMoves);
 
 		return queenMoves;
 	}

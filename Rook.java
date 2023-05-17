@@ -6,6 +6,7 @@ public class Rook extends ChessPiece {
 		super("rook", file, rank, side);
 	}
 
+	
 	public ArrayList<String> getMoves() {
 		ArrayList<String> rookMoves = new ArrayList<String>();
 

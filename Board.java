@@ -189,20 +189,20 @@ public class Board extends JComponent implements MouseListener {
             }
         } else if (!cp.isKnight()) {
             // All other pieces (except knights) cannot move if they bounded on all sides
-            boolean leftBounded = cpCol - 1 >= 0 && spaces[cpRow][cpCol - 1].getCp() != null;
-            boolean rightBounded = cpCol + 1 <= 7 && spaces[cpRow][cpCol + 1].getCp() != null;
-            boolean topBounded = cpRow - 1 >= 0 && spaces[cpRow - 1][cpCol].getCp() != null;
-            boolean bottomBounded = cpRow + 1 <= 7 && spaces[cpRow + 1][cpCol].getCp() != null;
+            boolean leftBounded = cpCol - 1 >= 0 && spaces[cpRow][cpCol - 1].getCp() != null && spaces[cpRow][cpCol - 1].getCp().sameSide(cp);;
+            boolean rightBounded = cpCol + 1 <= 7 && spaces[cpRow][cpCol + 1].getCp() != null && spaces[cpRow][cpCol + 1].getCp().sameSide(cp);;
+            boolean topBounded = cpRow - 1 >= 0 && spaces[cpRow - 1][cpCol].getCp() != null && spaces[cpRow - 1][cpCol].getCp().sameSide(cp);;
+            boolean bottomBounded = cpRow + 1 <= 7 && spaces[cpRow + 1][cpCol].getCp() != null && spaces[cpRow + 1][cpCol].getCp().sameSide(cp);;
 
             // Check if diagonals are bounded (this applies to queens, bishops, and kings)
             boolean topLeftDiagBounded = cpRow - 1 >= 0 && cpCol - 1 >= 0
-                    && spaces[cpRow - 1][cpCol - 1].getCp() != null;
+                    && spaces[cpRow - 1][cpCol - 1].getCp() != null && spaces[cpRow - 1][cpCol - 1].getCp().sameSide(cp);
             boolean topRightDiagBounded = cpRow - 1 >= 0 && cpCol + 1 <= 7
-                    && spaces[cpRow - 1][cpCol + 1].getCp() != null;
+                    && spaces[cpRow - 1][cpCol + 1].getCp() != null && spaces[cpRow - 1][cpCol + 1].getCp().sameSide(cp);;
             boolean bottomLeftDiagBounded = cpRow + 1 <= 7 && cpCol - 1 >= 0
-                    && spaces[cpRow + 1][cpCol - 1].getCp() != null;
+                    && spaces[cpRow + 1][cpCol - 1].getCp() != null && spaces[cpRow + 1][cpCol - 1].getCp().sameSide(cp);;
             boolean bottomRightDiagBounded = cpRow + 1 <= 7 && cpCol + 1 <= 7
-                    && spaces[cpRow + 1][cpCol + 1].getCp() != null;
+                    && spaces[cpRow + 1][cpCol + 1].getCp() != null && spaces[cpRow + 1][cpCol + 1].getCp().sameSide(cp);;
 
             boolean diagonalBounded = (topLeftDiagBounded || cpRow == 0) && (topRightDiagBounded || cpRow == 0)
                     && (bottomLeftDiagBounded || cpRow == 7) && (bottomRightDiagBounded || cpRow == 7);
@@ -321,20 +321,29 @@ public class Board extends JComponent implements MouseListener {
                 }
             }
 
-            for (int i = firstDiagMoves.size() - 1; i >= firstBlockedDiag1 + 1; i--) {
-                firstDiagMoves.remove(i);
+            if (firstBlockedDiag1 >= 0) {
+                for (int i = firstDiagMoves.size() - 1; i >= firstBlockedDiag1 + 2; i--) {
+                    System.out.println(firstDiagMoves.get(i));
+                    firstDiagMoves.remove(i);
+                }
             }
 
-            for (int i = secondDiagMoves.size() - 1; i >= firstBlockedDiag2 + 1; i--) {
-                secondDiagMoves.remove(i);
+            if (firstBlockedDiag2 >= 0) {
+                for (int i = secondDiagMoves.size() - 1; i >= firstBlockedDiag2 + 2; i--) {
+                    secondDiagMoves.remove(i);
+                }
             }
 
-            for (int i = thirdDiagMoves.size() - 1; i >= firstBlockedDiag3 + 1; i--) {
-                thirdDiagMoves.remove(i);
+            if (firstBlockedDiag3 >= 0) {
+                for (int i = thirdDiagMoves.size() - 1; i >= firstBlockedDiag3 + 2; i--) {
+                    thirdDiagMoves.remove(i);
+                }
             }
 
-            for (int i = fourthDiagMoves.size() - 1; i >= firstBlockedDiag4 + 1; i--) {
-                fourthDiagMoves.remove(i);
+            if (firstBlockedDiag4 >= 0) {
+                for (int i = fourthDiagMoves.size() - 1; i >= firstBlockedDiag4 + 2; i--) {
+                    fourthDiagMoves.remove(i);
+                }
             }
 
             cpMoves.clear();
