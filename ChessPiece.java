@@ -16,7 +16,6 @@ public abstract class ChessPiece {
 
 	/** 
 	* 
-	* @param none
 	* @return name - 
 	*/
 	public String getName() {

@@ -415,6 +415,38 @@ public class Board extends JComponent implements MouseListener {
                 int destRow = 8 - destRank;
                 int destCol = (int) destFile - 'A';
 
+                //promotion of pieces to a random type of piece
+                if (thisCp.isPawn() && thisCp.isWhite() && destRow == 0){
+                    int randomPiece = (int)(Math.random()*4);
+                    if (randomPiece == 0){
+                        spaces[destRow][destCol] = new Space(destRow, destCol, new Queen(destFile, destRank, "white"));
+                    } else if (randomPiece == 1){
+                        spaces[destRow][destCol] = new Space(destRow, destCol, new Knight(destFile, destRank, "white"));
+                    } else if (randomPiece == 2){
+                        spaces[destRow][destCol] = new Space(destRow, destCol, new Rook(destFile, destRank, "white"));
+                    } else {
+                        spaces[destRow][destCol] = new Space(destRow, destCol, new Bishop(destFile, destRank, "white"));
+                    }
+                    spaces[sourceRow][sourceCol] = new Space(sourceRank, sourceFile, null);
+                    repaint();
+                    switchTurns();
+                }
+                if (thisCp.isPawn() && thisCp.isBlack() && destRow == 7){
+                    int randomPiece = (int)(Math.random()*4);
+                    if (randomPiece == 0){
+                        spaces[destRow][destCol] = new Space(destRow, destCol, new Queen(destFile, destRank, "black"));
+                    } else if (randomPiece == 1){
+                        spaces[destRow][destCol] = new Space(destRow, destCol, new Knight(destFile, destRank, "black"));
+                    } else if (randomPiece == 2){
+                        spaces[destRow][destCol] = new Space(destRow, destCol, new Rook(destFile, destRank, "black"));
+                    } else {
+                        spaces[destRow][destCol] = new Space(destRow, destCol, new Bishop(destFile, destRank, "black"));
+                    }
+                    spaces[sourceRow][sourceCol] = new Space(sourceRank, sourceFile, null);
+                    repaint();
+                    switchTurns();
+                }
+
                 // If the piece is a king and it is trying to move to a space that would not
                 // result in a castle, then castling cannot occur
                 // for the rest of the game
