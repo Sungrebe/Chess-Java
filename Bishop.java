@@ -61,23 +61,25 @@ public class Bishop extends ChessPiece {
 		return diagonal4Moves;
 	}
 
+	public void resetRankAndFile() {
+		rank = getRank();
+		file = getFile();
+	}
+
 	public ArrayList<String> getMoves() {
 		ArrayList<String> bishopMoves = new ArrayList<String>();
 
 		bishopMoves.addAll(getDiagonal1Moves());
-
-		rank = getRank();
-		file = getFile();
+        
+		resetRankAndFile();
 
 		bishopMoves.addAll(getDiagonal2Moves());
 
-		rank = getRank();
-		file = getFile();
+		resetRankAndFile();
 		
 		bishopMoves.addAll(getDiagonal3Moves());
 		
-		rank = getRank();
-		file = getFile();
+		resetRankAndFile();
 		
 		bishopMoves.addAll(getDiagonal4Moves());
 

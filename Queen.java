@@ -25,6 +25,10 @@ public class Queen extends ChessPiece {
 		return b.getDiagonal1Moves();
 	}
 
+	public void resetRankAndFile() {
+		b.resetRankAndFile();
+	}
+
 	public ArrayList<String> getMoves() {
 		ArrayList<String> queenMoves = new ArrayList<String>();
 

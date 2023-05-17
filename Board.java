@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 public class Board extends JComponent implements MouseListener {
-    
+
     private Space[][] spaces;
 
     // Determine player turns
@@ -128,12 +128,13 @@ public class Board extends JComponent implements MouseListener {
                 } else {
                     g2d.setColor(Color.decode("#98BF64"));
                 }
-            
+
                 g2d.fillRect(col * 50, row * 50, 50, 50);
 
                 if (spaces[row][col].getCp() != null) {
                     ChessPiece c = spaces[row][col].getCp();
-                    Image cpImg = Toolkit.getDefaultToolkit().getImage("assets/" + c.getSide() + " " + c.getName() + ".png");
+                    Image cpImg = Toolkit.getDefaultToolkit()
+                            .getImage("assets/" + c.getSide() + " " + c.getName() + ".png");
 
                     g2d.drawImage(cpImg, 2 + col * 50, 3 + row * 50, 45, 45, new Color(0f, 0f, 0f, 0), this);
                 }
@@ -151,8 +152,8 @@ public class Board extends JComponent implements MouseListener {
             if (p.isWhite()) {
                 // If a white pawn is bounded in front, it cannot move
                 // or two spaces in front
-                if ((cpRow - 1 >= 0 && spaces[cpRow - 1][cpCol].getCp() != null) 
-                || (!p.hasMoved() && cpRow - 2 >= 0 && spaces[cpRow - 2][cpCol].getCp() != null)) {
+                if ((cpRow - 1 >= 0 && spaces[cpRow - 1][cpCol].getCp() != null)
+                        || (!p.hasMoved() && cpRow - 2 >= 0 && spaces[cpRow - 2][cpCol].getCp() != null)) {
                     cpMoves.clear();
                 } else {
                     cpMoves = p.getMoves();
@@ -160,30 +161,30 @@ public class Board extends JComponent implements MouseListener {
 
                 if (cpRow - 1 >= 0 && cpCol - 1 >= 0 && spaces[cpRow - 1][cpCol - 1].getCp() != null) {
                     // If top left diagonal has a piece
-                    cpMoves.add(""+(char) ((int) 'A' + cpCol - 1) + (8 - cpRow + 1));
+                    cpMoves.add("" + (char) ((int) 'A' + cpCol - 1) + (8 - cpRow + 1));
                 }
-                
+
                 if (cpRow - 1 >= 0 && cpCol + 1 <= 7 && spaces[cpRow - 1][cpCol + 1].getCp() != null) {
                     // If top right diagonal has a piece
-                    cpMoves.add(""+(char) ((int) 'A' + cpCol + 1) + (8 - cpRow + 1));
+                    cpMoves.add("" + (char) ((int) 'A' + cpCol + 1) + (8 - cpRow + 1));
                 }
             } else if (cp.isBlack()) {
                 // If a black pawn is bounded below, it cannot move
-                if ((cpRow + 1 <= 7 && spaces[cpRow + 1][cpCol].getCp() != null) 
-                || (!p.hasMoved() && cpRow + 2 <= 7 && spaces[cpRow + 2][cpCol].getCp() != null)) {
+                if ((cpRow + 1 <= 7 && spaces[cpRow + 1][cpCol].getCp() != null)
+                        || (!p.hasMoved() && cpRow + 2 <= 7 && spaces[cpRow + 2][cpCol].getCp() != null)) {
                     cpMoves.clear();
                 } else {
                     cpMoves = cp.getMoves();
                 }
-                
+
                 if (cpRow + 1 <= 7 && cpCol - 1 >= 0 && spaces[cpRow + 1][cpCol - 1].getCp() != null) {
                     // If bottom left diagonal has a piece
-                    cpMoves.add(""+(char) ((int) 'A' + cpCol - 1) + (8 - cpRow - 1));
+                    cpMoves.add("" + (char) ((int) 'A' + cpCol - 1) + (8 - cpRow - 1));
                 }
-                
+
                 if (cpRow + 1 <= 7 && cpCol + 1 <= 7 && spaces[cpRow + 1][cpCol + 1].getCp() != null) {
                     // If bottom right diagonal has a piece
-                    cpMoves.add(""+(char) ((int) 'A' + cpCol + 1) + (8 - cpRow - 1));
+                    cpMoves.add("" + (char) ((int) 'A' + cpCol + 1) + (8 - cpRow - 1));
                 }
             }
         } else if (!cp.isKnight()) {
@@ -194,21 +195,25 @@ public class Board extends JComponent implements MouseListener {
             boolean bottomBounded = cpRow + 1 <= 7 && spaces[cpRow + 1][cpCol].getCp() != null;
 
             // Check if diagonals are bounded (this applies to queens, bishops, and kings)
-            boolean topLeftDiagBounded = cpRow - 1 >= 0 && cpCol - 1 >= 0 && spaces[cpRow - 1][cpCol - 1].getCp() != null;
-            boolean topRightDiagBounded = cpRow - 1 >= 0 && cpCol + 1 <= 7 && spaces[cpRow - 1][cpCol + 1].getCp() != null;
-            boolean bottomLeftDiagBounded = cpRow + 1 <= 7 && cpCol - 1 >= 0 && spaces[cpRow + 1][cpCol - 1].getCp() != null;
-            boolean bottomRightDiagBounded = cpRow + 1 <= 7 && cpCol + 1 <= 7 && spaces[cpRow + 1][cpCol + 1].getCp() != null;
+            boolean topLeftDiagBounded = cpRow - 1 >= 0 && cpCol - 1 >= 0
+                    && spaces[cpRow - 1][cpCol - 1].getCp() != null;
+            boolean topRightDiagBounded = cpRow - 1 >= 0 && cpCol + 1 <= 7
+                    && spaces[cpRow - 1][cpCol + 1].getCp() != null;
+            boolean bottomLeftDiagBounded = cpRow + 1 <= 7 && cpCol - 1 >= 0
+                    && spaces[cpRow + 1][cpCol - 1].getCp() != null;
+            boolean bottomRightDiagBounded = cpRow + 1 <= 7 && cpCol + 1 <= 7
+                    && spaces[cpRow + 1][cpCol + 1].getCp() != null;
 
             boolean diagonalBounded = (topLeftDiagBounded || cpRow == 0) && (topRightDiagBounded || cpRow == 0)
-                && (bottomLeftDiagBounded || cpRow == 7) && (bottomRightDiagBounded || cpRow == 7);
+                    && (bottomLeftDiagBounded || cpRow == 7) && (bottomRightDiagBounded || cpRow == 7);
 
             // If bounded by other pieces or the board, then clear the piece's moves
             if ((leftBounded || cpCol == 0)
-                && (rightBounded || cpCol == 7) 
-                && (topBounded || cpRow == 0) 
-                && (bottomBounded || cpRow == 7) && (cp.isRook() || diagonalBounded) 
-                || (cp.isBishop() && diagonalBounded)) {
-                    cpMoves.clear();
+                    && (rightBounded || cpCol == 7)
+                    && (topBounded || cpRow == 0)
+                    && (bottomBounded || cpRow == 7) && (cp.isRook() || diagonalBounded)
+                    || (cp.isBishop() && diagonalBounded)) {
+                cpMoves.clear();
             } else {
                 cpMoves = cp.getMoves();
             }
@@ -216,227 +221,147 @@ public class Board extends JComponent implements MouseListener {
 
         if (cp.isKing()) {
             // Handle castling
-            if (
-                (cp.isWhite() && whiteCastlingValid && spaces[cpRow][cpCol + 1].getCp() == null && spaces[cpRow][cpCol + 2].getCp() == null) ||
-                (cp.isBlack() && blackCastlingValid && spaces[cpRow][cpCol + 1].getCp() == null && spaces[cpRow][cpCol + 2].getCp() == null)) {
-                    cpMoves.add(""+(char) ((int) 'A' + cpRow) + (8 - cpCol - 2));
+            if ((cp.isWhite() && whiteCastlingValid && spaces[cpRow][cpCol + 1].getCp() == null
+                    && spaces[cpRow][cpCol + 2].getCp() == null) ||
+                    (cp.isBlack() && blackCastlingValid && spaces[cpRow][cpCol + 1].getCp() == null
+                            && spaces[cpRow][cpCol + 2].getCp() == null)) {
+                cpMoves.add("" + (char) ((int) 'A' + cpRow) + (8 - cpCol - 2));
 
-                    spaces[cpRow][cpCol + 2].setCp(spaces[cpRow][cpCol].getCp());
-                    spaces[cpRow][cpCol + 1].setCp(spaces[cpRow][cpCol + 3].getCp());
-                    spaces[cpRow][cpCol].removeCp();
-                    spaces[cpRow][cpCol + 3].removeCp();
+                spaces[cpRow][cpCol + 2].setCp(spaces[cpRow][cpCol].getCp());
+                spaces[cpRow][cpCol + 1].setCp(spaces[cpRow][cpCol + 3].getCp());
+                spaces[cpRow][cpCol].removeCp();
+                spaces[cpRow][cpCol + 3].removeCp();
 
-                    repaint();
+                repaint();
 
-                    if (cp.isWhite()) whiteCastlingValid = false;
-                    if (cp.isBlack()) blackCastlingValid = false;
+                if (cp.isWhite())
+                    whiteCastlingValid = false;
+                if (cp.isBlack())
+                    blackCastlingValid = false;
 
-                    switchTurns();
-            } else if (
-                (cp.isWhite() && whiteCastlingValid && spaces[cpRow][cpCol - 1].getCp() == null && spaces[cpRow][cpCol - 2].getCp() == null) ||
-                (cp.isBlack() && blackCastlingValid && spaces[cpRow][cpCol - 1].getCp() == null && spaces[cpRow][cpCol - 2].getCp() == null)) {
-                    cpMoves.add(""+(char) ((int) 'A' + cpRow) + (8 - cpCol + 2));
+                switchTurns();
+            } else if ((cp.isWhite() && whiteCastlingValid && spaces[cpRow][cpCol - 1].getCp() == null
+                    && spaces[cpRow][cpCol - 2].getCp() == null) ||
+                    (cp.isBlack() && blackCastlingValid && spaces[cpRow][cpCol - 1].getCp() == null
+                            && spaces[cpRow][cpCol - 2].getCp() == null)) {
+                cpMoves.add("" + (char) ((int) 'A' + cpRow) + (8 - cpCol + 2));
 
-                    spaces[cpRow][cpCol - 2].setCp(spaces[cpRow][cpCol].getCp());
-                    spaces[cpRow][cpCol - 1].setCp(spaces[cpRow][cpCol - 4].getCp());
-                    spaces[cpRow][cpCol].removeCp();
-                    spaces[cpRow][cpCol - 4].removeCp();
+                spaces[cpRow][cpCol - 2].setCp(spaces[cpRow][cpCol].getCp());
+                spaces[cpRow][cpCol - 1].setCp(spaces[cpRow][cpCol - 4].getCp());
+                spaces[cpRow][cpCol].removeCp();
+                spaces[cpRow][cpCol - 4].removeCp();
 
-                    repaint();
+                repaint();
 
-                    if (cp.isWhite()) whiteCastlingValid = false;
-                    if (cp.isBlack()) blackCastlingValid = false;
+                if (cp.isWhite())
+                    whiteCastlingValid = false;
+                if (cp.isBlack())
+                    blackCastlingValid = false;
 
-                    switchTurns();
+                switchTurns();
             }
         }
 
-        // Bishops and queens are bounded diagonally (they cannot jump over pieces that are blocking the diagonal)
-        if (cp.isBishop() || cp.isQueen()) {
-                if (cp.isBishop()) {
-                    Bishop b = (Bishop) cp;
+        if (cp.isBishop()) {
+            Bishop b = (Bishop) cp;
+            ArrayList<String> firstDiagMoves = b.getDiagonal1Moves();
+            b.resetRankAndFile();
+            ArrayList<String> secondDiagMoves = b.getDiagonal2Moves();
+            b.resetRankAndFile();
+            ArrayList<String> thirdDiagMoves = b.getDiagonal3Moves();
+            b.resetRankAndFile();
+            ArrayList<String> fourthDiagMoves = b.getDiagonal4Moves();
 
-                ArrayList<String> firstDiagMoves = b.getDiagonal1Moves();
-                ArrayList<String> secondDiagMoves = b.getDiagonal2Moves();
-                ArrayList<String> thirdDiagMoves = b.getDiagonal3Moves();
-                ArrayList<String> fourthDiagMoves = b.getDiagonal4Moves();
+            int firstBlockedDiag1 = firstDiagMoves.size() - 1;
+            int firstBlockedDiag2 = secondDiagMoves.size() - 1;
+            int firstBlockedDiag3 = thirdDiagMoves.size() - 1;
+            int firstBlockedDiag4 = fourthDiagMoves.size() - 1;
 
-                int firstBlockedDiag1 = firstDiagMoves.size() - 1;
-                int firstBlockedDiag2 = secondDiagMoves.size() - 1;
-                int firstBlockedDiag3 = thirdDiagMoves.size() - 1;
-                int firstBlockedDiag4 = fourthDiagMoves.size() - 1;
+            for (int i = 0; i < firstDiagMoves.size(); i++) {
+                String diag1Coord = firstDiagMoves.get(i);
+                char diag1CoordFile = diag1Coord.charAt(0);
+                int diag1CoordRank = Integer.parseInt(diag1Coord, 1, 2, 10);
 
-                for (int i = 0; i < firstDiagMoves.size(); i++) {
-                    String diag1Coord = firstDiagMoves.get(i);
-                    char diag1CoordFile = diag1Coord.charAt(0);
-                    int diag1CoordRank = Integer.parseInt(diag1Coord, 1, 2, 10);
-
-                    if (spaces[8 - diag1CoordRank][(int) diag1CoordFile - 'A'].getCp() != null) {
-                        firstBlockedDiag1 = i;
-                        break;
-                    }
+                if (spaces[8 - diag1CoordRank][(int) diag1CoordFile - 'A'].getCp() != null) {
+                    firstBlockedDiag1 = i;
+                    break;
                 }
-
-                for (int i = 0; i < secondDiagMoves.size(); i++) {
-                    String diag2Coord = secondDiagMoves.get(i);
-                    char diag2CoordFile = diag2Coord.charAt(0);
-                    int diag2CoordRank = Integer.parseInt(diag2Coord, 1, 2, 10);
-
-                    if (spaces[8 - diag2CoordRank][(int) diag2CoordFile - 'A'].getCp() != null) {
-                        firstBlockedDiag2 = i;
-                        break;
-                    }
-                }
-
-                for (int i = 0; i < thirdDiagMoves.size(); i++) {
-                    String diag3Coord = thirdDiagMoves.get(i);
-                    char diag3CoordFile = diag3Coord.charAt(0);
-                    int diag3CoordRank = Integer.parseInt(diag3Coord, 1, 2, 10);
-
-                    if (spaces[8 - diag3CoordRank][(int) diag3CoordFile - 'A'].getCp() != null) {
-                        firstBlockedDiag3 = i;
-                        break;
-                    }
-                }
-
-                for (int i = 0; i < fourthDiagMoves.size(); i++) {
-                    String diag4Coord = fourthDiagMoves.get(i);
-                    char diag4CoordFile = diag4Coord.charAt(0);
-                    int diag4CoordRank = Integer.parseInt(diag4Coord, 1, 2, 10);
-
-                    if (spaces[8 - diag4CoordRank][(int) diag4CoordFile - 'A'].getCp() != null) {
-                        firstBlockedDiag4 = i;
-                        break;
-                    }
-                }
-
-                for (int i = firstDiagMoves.size() - 1; i >= firstBlockedDiag1 + 1; i--) {
-                    firstDiagMoves.remove(i);
-                }
-
-                for (int i = secondDiagMoves.size() - 1; i >= firstBlockedDiag2 + 1; i--) {
-                    secondDiagMoves.remove(i);
-                }
-
-                for (int i = thirdDiagMoves.size() - 1; i >= firstBlockedDiag3 + 1; i--) {
-                    thirdDiagMoves.remove(i);
-                }
-
-                for (int i = fourthDiagMoves.size() - 1; i >= firstBlockedDiag4 + 1; i--) {
-                    fourthDiagMoves.remove(i);
-                }
-
-                cpMoves.clear();
-                
-                if (cp.getMoves().containsAll(firstDiagMoves))
-                    cpMoves.addAll(firstDiagMoves);
-                
-                if (cp.getMoves().containsAll(secondDiagMoves))
-                    cpMoves.addAll(secondDiagMoves);
-                    
-                if (cp.getMoves().containsAll(thirdDiagMoves))
-                    cpMoves.addAll(thirdDiagMoves);
-                
-                if (cp.getMoves().containsAll(fourthDiagMoves))
-                    cpMoves.addAll(fourthDiagMoves);
             }
 
-            if (cp.isQueen()) {
-                Queen q = (Queen) cp;
+            for (int i = 0; i < secondDiagMoves.size(); i++) {
+                String diag2Coord = secondDiagMoves.get(i);
+                char diag2CoordFile = diag2Coord.charAt(0);
+                int diag2CoordRank = Integer.parseInt(diag2Coord, 1, 2, 10);
 
-                ArrayList<String> firstDiagMoves = q.getDiagonal1Moves();
-                ArrayList<String> secondDiagMoves = q.getDiagonal2Moves();
-                ArrayList<String> thirdDiagMoves = q.getDiagonal3Moves();
-                ArrayList<String> fourthDiagMoves = q.getDiagonal4Moves();
-
-                int firstBlockedDiag1 = firstDiagMoves.size() - 1;
-                int firstBlockedDiag2 = secondDiagMoves.size() - 1;
-                int firstBlockedDiag3 = thirdDiagMoves.size() - 1;
-                int firstBlockedDiag4 = fourthDiagMoves.size() - 1;
-
-                for (int i = 0; i < firstDiagMoves.size(); i++) {
-                    String diag1Coord = firstDiagMoves.get(i);
-                    char diag1CoordFile = diag1Coord.charAt(0);
-                    int diag1CoordRank = Integer.parseInt(diag1Coord, 1, 2, 10);
-
-                    if (spaces[8 - diag1CoordRank][(int) diag1CoordFile - 'A'].getCp() != null) {
-                        firstBlockedDiag1 = i;
-                        break;
-                    }
+                if (spaces[8 - diag2CoordRank][(int) diag2CoordFile - 'A'].getCp() != null) {
+                    firstBlockedDiag2 = i;
+                    break;
                 }
-
-                for (int i = 0; i < secondDiagMoves.size(); i++) {
-                    String diag2Coord = secondDiagMoves.get(i);
-                    char diag2CoordFile = diag2Coord.charAt(0);
-                    int diag2CoordRank = Integer.parseInt(diag2Coord, 1, 2, 10);
-
-                    if (spaces[8 - diag2CoordRank][(int) diag2CoordFile - 'A'].getCp() != null) {
-                        firstBlockedDiag2 = i;
-                        break;
-                    }
-                }
-
-                for (int i = 0; i < thirdDiagMoves.size(); i++) {
-                    String diag3Coord = thirdDiagMoves.get(i);
-                    char diag3CoordFile = diag3Coord.charAt(0);
-                    int diag3CoordRank = Integer.parseInt(diag3Coord, 1, 2, 10);
-
-                    if (spaces[8 - diag3CoordRank][(int) diag3CoordFile - 'A'].getCp() != null) {
-                        firstBlockedDiag3 = i;
-                        break;
-                    }
-                }
-
-                for (int i = 0; i < fourthDiagMoves.size(); i++) {
-                    String diag4Coord = fourthDiagMoves.get(i);
-                    char diag4CoordFile = diag4Coord.charAt(0);
-                    int diag4CoordRank = Integer.parseInt(diag4Coord, 1, 2, 10);
-
-                    if (spaces[8 - diag4CoordRank][(int) diag4CoordFile - 'A'].getCp() != null) {
-                        firstBlockedDiag4 = i;
-                        break;
-                    }
-                }
-
-                for (int i = firstDiagMoves.size() - 1; i >= firstBlockedDiag1 + 1; i--) {
-                    firstDiagMoves.remove(i);
-                }
-
-                for (int i = secondDiagMoves.size() - 1; i >= firstBlockedDiag2 + 1; i--) {
-                    secondDiagMoves.remove(i);
-                }
-
-                for (int i = thirdDiagMoves.size() - 1; i >= firstBlockedDiag3 + 1; i--) {
-                    thirdDiagMoves.remove(i);
-                }
-
-                for (int i = fourthDiagMoves.size() - 1; i >= firstBlockedDiag4 + 1; i--) {
-                    fourthDiagMoves.remove(i);
-                }
-
-                cpMoves.clear();
-                
-                if (cp.getMoves().containsAll(firstDiagMoves))
-                    cpMoves.addAll(firstDiagMoves);
-                
-                if (cp.getMoves().containsAll(secondDiagMoves))
-                    cpMoves.addAll(secondDiagMoves);
-                    
-                if (cp.getMoves().containsAll(thirdDiagMoves))
-                    cpMoves.addAll(thirdDiagMoves);
-                
-                if (cp.getMoves().containsAll(fourthDiagMoves))
-                    cpMoves.addAll(fourthDiagMoves);
             }
+
+            for (int i = 0; i < thirdDiagMoves.size(); i++) {
+                String diag3Coord = thirdDiagMoves.get(i);
+                char diag3CoordFile = diag3Coord.charAt(0);
+                int diag3CoordRank = Integer.parseInt(diag3Coord, 1, 2, 10);
+
+                if (spaces[8 - diag3CoordRank][(int) diag3CoordFile - 'A'].getCp() != null) {
+                    firstBlockedDiag3 = i;
+                    break;
+                }
+            }
+
+            for (int i = 0; i < fourthDiagMoves.size(); i++) {
+                String diag4Coord = fourthDiagMoves.get(i);
+                char diag4CoordFile = diag4Coord.charAt(0);
+                int diag4CoordRank = Integer.parseInt(diag4Coord, 1, 2, 10);
+
+                if (spaces[8 - diag4CoordRank][(int) diag4CoordFile - 'A'].getCp() != null) {
+                    firstBlockedDiag4 = i;
+                    break;
+                }
+            }
+
+            for (int i = firstDiagMoves.size() - 1; i >= firstBlockedDiag1 + 1; i--) {
+                firstDiagMoves.remove(i);
+            }
+
+            for (int i = secondDiagMoves.size() - 1; i >= firstBlockedDiag2 + 1; i--) {
+                secondDiagMoves.remove(i);
+            }
+
+            for (int i = thirdDiagMoves.size() - 1; i >= firstBlockedDiag3 + 1; i--) {
+                thirdDiagMoves.remove(i);
+            }
+
+            for (int i = fourthDiagMoves.size() - 1; i >= firstBlockedDiag4 + 1; i--) {
+                fourthDiagMoves.remove(i);
+            }
+
+            cpMoves.clear();
+
+            if (cp.getMoves().containsAll(firstDiagMoves))
+                cpMoves.addAll(firstDiagMoves);
+
+            if (cp.getMoves().containsAll(secondDiagMoves))
+                cpMoves.addAll(secondDiagMoves);
+
+            if (cp.getMoves().containsAll(thirdDiagMoves))
+                cpMoves.addAll(thirdDiagMoves);
+
+            if (cp.getMoves().containsAll(fourthDiagMoves))
+                cpMoves.addAll(fourthDiagMoves);
         }
 
-        
+        if (cp.isQueen()) {
+            System.out.println(cpMoves);
+        }
 
         return cpMoves;
     }
 
     private void isCausingCheck(char sourceF, int sourceR) {
-        // If another piece's moves contain either the white king or black king pos, and that piece is on the opposite
+        // If another piece's moves contain either the white king or black king pos, and
+        // that piece is on the opposite
         // side of the king being checked, then that would be considered check
         ChessPiece aCp = spaces[8 - sourceR][(int) sourceF - 'A'].getCp();
 
@@ -481,39 +406,47 @@ public class Board extends JComponent implements MouseListener {
                 int destRow = 8 - destRank;
                 int destCol = (int) destFile - 'A';
 
-                // If the piece is a king and it is trying to move to a space that would not result in a castle, then castling cannot occur
+                // If the piece is a king and it is trying to move to a space that would not
+                // result in a castle, then castling cannot occur
                 // for the rest of the game
 
                 if ((thisCp.isKing() && destRow != sourceRow && destCol != sourceCol + 2)
-                || (thisCp.isKing() && destRow != sourceRow && destCol != sourceCol - 2)) {
-                    if (thisCp.isWhite()) whiteCastlingValid = false;
-                    if (thisCp.isBlack()) blackCastlingValid = false;
-                } 
+                        || (thisCp.isKing() && destRow != sourceRow && destCol != sourceCol - 2)) {
+                    if (thisCp.isWhite())
+                        whiteCastlingValid = false;
+                    if (thisCp.isBlack())
+                        blackCastlingValid = false;
+                }
 
                 if (destRow == sourceRow && destCol > sourceCol) {
                     if ((thisCp.isKing() && destRow == sourceRow && destCol != sourceCol + 2)) {
-                        if (thisCp.isWhite()) whiteCastlingValid = false;
-                        if (thisCp.isBlack()) blackCastlingValid = false;
-                    }    
+                        if (thisCp.isWhite())
+                            whiteCastlingValid = false;
+                        if (thisCp.isBlack())
+                            blackCastlingValid = false;
+                    }
                 } else if (destRow == sourceRow && destCol < sourceCol) {
                     if ((thisCp.isKing() && destRow == sourceRow && destCol != sourceCol - 2)) {
-                        if (thisCp.isWhite()) whiteCastlingValid = false;
-                        if (thisCp.isBlack()) blackCastlingValid = false;
-                    }    
+                        if (thisCp.isWhite())
+                            whiteCastlingValid = false;
+                        if (thisCp.isBlack())
+                            blackCastlingValid = false;
+                    }
                 }
 
                 ArrayList<String> validMoves = getValidMoves(sourceRow, sourceCol, thisCp);
 
-                if (validMoves.contains(""+destFile + destRank)) {
+                if (validMoves.contains("" + destFile + destRank)) {
                     // Check if destination space is occupied
-                    // Also see if the occupying piece is on the same side as the moving piece (if so, then the piece cannot
+                    // Also see if the occupying piece is on the same side as the moving piece (if
+                    // so, then the piece cannot
                     // move there as it would be capturing a piece on its own side)
 
                     if (!whiteInCheck) {
                         if ((spaces[destRow][destCol].getCp() == null)
-                        || (spaces[destRow][destCol].getCp() != null && !spaces[destRow][destCol].getCp().sameSide(thisCp))
-                        ) {
-                
+                                || (spaces[destRow][destCol].getCp() != null
+                                        && !spaces[destRow][destCol].getCp().sameSide(thisCp))) {
+
                             spaces[destRow][destCol].setCp(thisCp);
                             spaces[sourceRow][sourceCol].removeCp();
 
@@ -551,22 +484,24 @@ public class Board extends JComponent implements MouseListener {
     public void mousePressed(MouseEvent evt) {
         numClicks++;
 
-        // If the number of clicks is odd, then the user has selected a starting piece and is trying to move
+        // If the number of clicks is odd, then the user has selected a starting piece
+        // and is trying to move
         if (numClicks % 2 == 1) {
             sourceFile = (char) ((int) 'A' + evt.getX() / 50);
             sourceRank = 8 - evt.getY() / 50;
         } else if (numClicks % 2 == 0) {
-            // If the number of clicks is even, then the user has selected a destination to move the piece to
+            // If the number of clicks is even, then the user has selected a destination to
+            // move the piece to
             destFile = (char) ((int) 'A' + evt.getX() / 50);
             destRank = 8 - evt.getY() / 50;
 
-            if (spaces[8 - sourceRank][(int) sourceFile - 'A'].getCp() != null && 
-                spaces[8 - sourceRank][(int) sourceFile - 'A'].getCp().isKing()) {
-                    if (spaces[8 - sourceRank][(int) sourceFile - 'A'].getCp().isWhite()) {
-                        whiteKingPos = ""+destFile + destRank;
-                    } else if (spaces[8 - sourceRank][(int) sourceFile - 'A'].getCp().isBlack()) {
-                        blackKingPos = ""+destFile + destRank;
-                    }
+            if (spaces[8 - sourceRank][(int) sourceFile - 'A'].getCp() != null &&
+                    spaces[8 - sourceRank][(int) sourceFile - 'A'].getCp().isKing()) {
+                if (spaces[8 - sourceRank][(int) sourceFile - 'A'].getCp().isWhite()) {
+                    whiteKingPos = "" + destFile + destRank;
+                } else if (spaces[8 - sourceRank][(int) sourceFile - 'A'].getCp().isBlack()) {
+                    blackKingPos = "" + destFile + destRank;
+                }
             }
 
             System.out.println(whiteCastlingValid);
@@ -580,12 +515,12 @@ public class Board extends JComponent implements MouseListener {
                     } else {
                         JOptionPane.showMessageDialog(null, "White in check");
                         isCausingCheck(sourceFile, sourceRank);
-    
+
                         whiteToMove = true;
                         blackToMove = false;
                     }
                 }
-    
+
                 if (blackInCheck) {
                     if (!blackInCheck) {
                         whiteToMove = true;
@@ -593,7 +528,7 @@ public class Board extends JComponent implements MouseListener {
                     } else {
                         JOptionPane.showMessageDialog(null, "Black in check");
                         isCausingCheck(sourceFile, sourceRank);
-    
+
                         whiteToMove = false;
                         blackToMove = true;
                     }
@@ -603,18 +538,23 @@ public class Board extends JComponent implements MouseListener {
                 isCausingCheck(destFile, destRank);
             }
         } else if (numClicks % 3 == 0) {
-            // If the number of clicks is divisible by three, then reset the click count to 0 (so that the user can make a second move)
+            // If the number of clicks is divisible by three, then reset the click count to
+            // 0 (so that the user can make a second move)
             numClicks = 0;
         }
     }
 
-    public void mouseClicked(MouseEvent evt) {}
+    public void mouseClicked(MouseEvent evt) {
+    }
 
-    public void mouseReleased(MouseEvent evt) {}
+    public void mouseReleased(MouseEvent evt) {
+    }
 
-    public void mouseEntered(MouseEvent evt) {}
+    public void mouseEntered(MouseEvent evt) {
+    }
 
-    public void mouseExited(MouseEvent evt) {}
+    public void mouseExited(MouseEvent evt) {
+    }
 
     class Space {
 
@@ -622,7 +562,7 @@ public class Board extends JComponent implements MouseListener {
         private int col;
 
         private ChessPiece cp;
-        
+
         public Space(int row, int col, ChessPiece cp) {
             this.row = row;
             this.col = col;
