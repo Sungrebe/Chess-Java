@@ -361,8 +361,286 @@ public class Board extends JComponent implements MouseListener {
                 cpMoves.addAll(fourthDiagMoves);
         }
 
+        if (cp.isRook()) {
+            Rook r = (Rook) cp;
+            ArrayList<String> frontMoves = r.getFrontSpaces();
+            ArrayList<String> backMoves = r.getBackSpaces();
+            ArrayList<String> leftMoves = r.getLeftSpaces();
+            ArrayList<String> rightMoves = r.getRightSpaces();
+
+            int firstBlockedFront = frontMoves.size() - 1;
+            int firstBlockedBack = frontMoves.size() - 1;
+            int firstBlockedLeft = frontMoves.size() - 1;
+            int firstBlockedRight = frontMoves.size() - 1;
+
+            for (int i = 0; i < frontMoves.size(); i++) {
+                String frontCoord = frontMoves.get(i);
+                char frontCoordFile = frontCoord.charAt(0);
+                int frontCoordRank = Integer.parseInt(frontCoord, 1, 2, 10);
+
+                if (spaces[8 - frontCoordRank][(int) frontCoordFile - 'A'].getCp() != null) {
+                    firstBlockedFront = i;
+                    break;
+                }
+            }
+
+            for (int i = 0; i < backMoves.size(); i++) {
+                String backCoord = backMoves.get(i);
+                char backCoordFile = backCoord.charAt(0);
+                int backCoordRank = Integer.parseInt(backCoord, 1, 2, 10);
+
+                if (spaces[8 - backCoordRank][(int) backCoordFile - 'A'].getCp() != null) {
+                    firstBlockedBack = i;
+                    break;
+                }
+            }
+
+            for (int i = 0; i < leftMoves.size(); i++) {
+                String leftCoord = leftMoves.get(i);
+                char leftCoordFile = leftCoord.charAt(0);
+                int leftCoordRank = Integer.parseInt(leftCoord, 1, 2, 10);
+
+                if (spaces[8 - leftCoordRank][(int) leftCoordFile - 'A'].getCp() != null) {
+                    firstBlockedLeft = i;
+                    break;
+                }
+            }
+
+            for (int i = 0; i < rightMoves.size(); i++) {
+                String rightCoord = rightMoves.get(i);
+                char rightCoordFile = rightCoord.charAt(0);
+                int rightCoordRank = Integer.parseInt(rightCoord, 1, 2, 10);
+
+                if (spaces[8 - rightCoordRank][(int) rightCoordFile - 'A'].getCp() != null) {
+                    firstBlockedRight = i;
+                    break;
+                }
+            }
+
+            if (firstBlockedFront >= 0) {
+                for (int i = frontMoves.size() - 1; i >= firstBlockedFront + 2; i--) {
+                    frontMoves.remove(i);
+                }
+            }
+
+            if (firstBlockedBack >= 0) {
+                for (int i = backMoves.size() - 1; i >= firstBlockedBack + 2; i--) {
+                    backMoves.remove(i);
+                }
+            }
+
+            if (firstBlockedLeft >= 0) {
+                for (int i = leftMoves.size() - 1; i >= firstBlockedLeft + 2; i--) {
+                    leftMoves.remove(i);
+                }
+            }
+
+            if (firstBlockedRight >= 0) {
+                for (int i = rightMoves.size() - 1; i >= firstBlockedRight + 2; i--) {
+                    rightMoves.remove(i);
+                }
+            }
+
+            cpMoves.clear();
+
+            if (cp.getMoves().containsAll(frontMoves))
+                cpMoves.addAll(frontMoves);
+
+            if (cp.getMoves().containsAll(backMoves))
+                cpMoves.addAll(backMoves);
+
+            if (cp.getMoves().containsAll(leftMoves))
+                cpMoves.addAll(leftMoves);
+
+            if (cp.getMoves().containsAll(rightMoves))
+                cpMoves.addAll(rightMoves);
+        }
+
         if (cp.isQueen()) {
-            System.out.println(cpMoves);
+            Queen q = (Queen) cp;
+            ArrayList<String> firstDiagMoves = q.getDiagonal1Moves();
+            q.resetRankAndFile();
+            ArrayList<String> secondDiagMoves = q.getDiagonal2Moves();
+            q.resetRankAndFile();
+            ArrayList<String> thirdDiagMoves = q.getDiagonal3Moves();
+            q.resetRankAndFile();
+            ArrayList<String> fourthDiagMoves = q.getDiagonal4Moves();
+
+            int firstBlockedDiag1 = firstDiagMoves.size() - 1;
+            int firstBlockedDiag2 = secondDiagMoves.size() - 1;
+            int firstBlockedDiag3 = thirdDiagMoves.size() - 1;
+            int firstBlockedDiag4 = fourthDiagMoves.size() - 1;
+
+            for (int i = 0; i < firstDiagMoves.size(); i++) {
+                String diag1Coord = firstDiagMoves.get(i);
+                char diag1CoordFile = diag1Coord.charAt(0);
+                int diag1CoordRank = Integer.parseInt(diag1Coord, 1, 2, 10);
+
+                if (spaces[8 - diag1CoordRank][(int) diag1CoordFile - 'A'].getCp() != null) {
+                    firstBlockedDiag1 = i;
+                    break;
+                }
+            }
+
+            for (int i = 0; i < secondDiagMoves.size(); i++) {
+                String diag2Coord = secondDiagMoves.get(i);
+                char diag2CoordFile = diag2Coord.charAt(0);
+                int diag2CoordRank = Integer.parseInt(diag2Coord, 1, 2, 10);
+
+                if (spaces[8 - diag2CoordRank][(int) diag2CoordFile - 'A'].getCp() != null) {
+                    firstBlockedDiag2 = i;
+                    break;
+                }
+            }
+
+            for (int i = 0; i < thirdDiagMoves.size(); i++) {
+                String diag3Coord = thirdDiagMoves.get(i);
+                char diag3CoordFile = diag3Coord.charAt(0);
+                int diag3CoordRank = Integer.parseInt(diag3Coord, 1, 2, 10);
+
+                if (spaces[8 - diag3CoordRank][(int) diag3CoordFile - 'A'].getCp() != null) {
+                    firstBlockedDiag3 = i;
+                    break;
+                }
+            }
+
+            for (int i = 0; i < fourthDiagMoves.size(); i++) {
+                String diag4Coord = fourthDiagMoves.get(i);
+                char diag4CoordFile = diag4Coord.charAt(0);
+                int diag4CoordRank = Integer.parseInt(diag4Coord, 1, 2, 10);
+
+                if (spaces[8 - diag4CoordRank][(int) diag4CoordFile - 'A'].getCp() != null) {
+                    firstBlockedDiag4 = i;
+                    break;
+                }
+            }
+
+            if (firstBlockedDiag1 >= 0) {
+                for (int i = firstDiagMoves.size() - 1; i >= firstBlockedDiag1 + 1; i--) {
+                    System.out.println(firstDiagMoves.get(i));
+                    firstDiagMoves.remove(i);
+                }
+            }
+
+            if (firstBlockedDiag2 >= 0) {
+                for (int i = secondDiagMoves.size() - 1; i >= firstBlockedDiag2 + 1; i--) {
+                    secondDiagMoves.remove(i);
+                }
+            }
+
+            if (firstBlockedDiag3 >= 0) {
+                for (int i = thirdDiagMoves.size() - 1; i >= firstBlockedDiag3 + 1; i--) {
+                    thirdDiagMoves.remove(i);
+                }
+            }
+
+            if (firstBlockedDiag4 >= 0) {
+                for (int i = fourthDiagMoves.size() - 1; i >= firstBlockedDiag4 + 1; i--) {
+                    fourthDiagMoves.remove(i);
+                }
+            }
+
+            if (cp.getMoves().containsAll(firstDiagMoves))
+                cpMoves.addAll(firstDiagMoves);
+
+            if (cp.getMoves().containsAll(secondDiagMoves))
+                cpMoves.addAll(secondDiagMoves);
+
+            if (cp.getMoves().containsAll(thirdDiagMoves))
+                cpMoves.addAll(thirdDiagMoves);
+
+            if (cp.getMoves().containsAll(fourthDiagMoves))
+                cpMoves.addAll(fourthDiagMoves);
+
+                ArrayList<String> frontMoves = q.getFrontSpaces();
+                ArrayList<String> backMoves = q.getBackSpaces();
+                ArrayList<String> leftMoves = q.getLeftSpaces();
+                ArrayList<String> rightMoves = q.getRightSpaces();
+    
+                int firstBlockedFront = frontMoves.size() - 1;
+                int firstBlockedBack = frontMoves.size() - 1;
+                int firstBlockedLeft = frontMoves.size() - 1;
+                int firstBlockedRight = frontMoves.size() - 1;
+    
+                for (int i = 0; i < frontMoves.size(); i++) {
+                    String frontCoord = frontMoves.get(i);
+                    char frontCoordFile = frontCoord.charAt(0);
+                    int frontCoordRank = Integer.parseInt(frontCoord, 1, 2, 10);
+    
+                    if (spaces[8 - frontCoordRank][(int) frontCoordFile - 'A'].getCp() != null) {
+                        firstBlockedFront = i;
+                        break;
+                    }
+                }
+    
+                for (int i = 0; i < backMoves.size(); i++) {
+                    String backCoord = backMoves.get(i);
+                    char backCoordFile = backCoord.charAt(0);
+                    int backCoordRank = Integer.parseInt(backCoord, 1, 2, 10);
+    
+                    if (spaces[8 - backCoordRank][(int) backCoordFile - 'A'].getCp() != null) {
+                        firstBlockedBack = i;
+                        break;
+                    }
+                }
+    
+                for (int i = 0; i < leftMoves.size(); i++) {
+                    String leftCoord = leftMoves.get(i);
+                    char leftCoordFile = leftCoord.charAt(0);
+                    int leftCoordRank = Integer.parseInt(leftCoord, 1, 2, 10);
+    
+                    if (spaces[8 - leftCoordRank][(int) leftCoordFile - 'A'].getCp() != null) {
+                        firstBlockedLeft = i;
+                        break;
+                    }
+                }
+    
+                for (int i = 0; i < rightMoves.size(); i++) {
+                    String rightCoord = rightMoves.get(i);
+                    char rightCoordFile = rightCoord.charAt(0);
+                    int rightCoordRank = Integer.parseInt(rightCoord, 1, 2, 10);
+    
+                    if (spaces[8 - rightCoordRank][(int) rightCoordFile - 'A'].getCp() != null) {
+                        firstBlockedRight = i;
+                        break;
+                    }
+                }
+    
+                if (firstBlockedFront >= 0) {
+                    for (int i = frontMoves.size() - 1; i >= firstBlockedFront + 2; i--) {
+                        frontMoves.remove(i);
+                    }
+                }
+    
+                if (firstBlockedBack >= 0) {
+                    for (int i = backMoves.size() - 1; i >= firstBlockedBack + 2; i--) {
+                        backMoves.remove(i);
+                    }
+                }
+    
+                if (firstBlockedLeft >= 0) {
+                    for (int i = leftMoves.size() - 1; i >= firstBlockedLeft + 2; i--) {
+                        leftMoves.remove(i);
+                    }
+                }
+    
+                if (firstBlockedRight >= 0) {
+                    for (int i = rightMoves.size() - 1; i >= firstBlockedRight + 2; i--) {
+                        rightMoves.remove(i);
+                    }
+                }
+
+                if (cp.getMoves().containsAll(frontMoves))
+                    cpMoves.addAll(frontMoves);
+    
+                if (cp.getMoves().containsAll(backMoves))
+                    cpMoves.addAll(backMoves);
+    
+                if (cp.getMoves().containsAll(leftMoves))
+                    cpMoves.addAll(leftMoves);
+    
+                if (cp.getMoves().containsAll(rightMoves))
+                    cpMoves.addAll(rightMoves);
         }
 
         return cpMoves;
@@ -382,6 +660,8 @@ public class Board extends JComponent implements MouseListener {
 
         if (aCp != null && !aCp.isKing()) {
             if (aCp.isBlack()) {
+                blackInCheck = false;
+
                 if (aCp.getMoves().contains(whiteKingPos)) {
                     whiteInCheck = true;
                     System.out.println("white in check: " + whiteInCheck);
@@ -389,6 +669,8 @@ public class Board extends JComponent implements MouseListener {
                     whiteInCheck = false;
                 }
             } else if (aCp.isWhite()) {
+                whiteInCheck = false;
+                
                 if (aCp.getMoves().contains(blackKingPos)) {
                     blackInCheck = true;
                 } else {

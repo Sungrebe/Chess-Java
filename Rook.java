@@ -6,29 +6,56 @@ public class Rook extends ChessPiece {
 		super("rook", file, rank, side);
 	}
 
-	
-	public ArrayList<String> getMoves() {
-		ArrayList<String> rookMoves = new ArrayList<String>();
+	public ArrayList<String> getFrontSpaces() {
+		ArrayList<String> frontSpaces = new ArrayList<String>();
 
 		// Spaces in front of the rook
 		for (int i = getRank(); i <= 8; i++) {
-			rookMoves.add(""+getFile() + i);
+			frontSpaces.add(""+getFile() + i);
 		}
+
+		return frontSpaces;
+	}
+
+	public ArrayList<String> getBackSpaces() {
+		ArrayList<String> backSpaces = new ArrayList<String>();
 
 		// Spaces behind the rook
 		for (int i = getRank(); i > 1; i--) {
-			rookMoves.add(""+getFile() + i);
+			backSpaces.add(""+getFile() + i);
 		}
+
+		return backSpaces;
+	}
+
+	public ArrayList<String> getRightSpaces() {
+		ArrayList<String> rightSpaces = new ArrayList<String>();
 
 		// Spaces to the right of the rook
 		for (int i = getFile(); i <= (int) 'H'; i++) {
-			rookMoves.add(""+(char) i + getRank());
+			rightSpaces.add(""+(char) i + getRank());
 		}
+
+		return rightSpaces;
+	}
+
+	public ArrayList<String> getLeftSpaces() {
+		ArrayList<String> leftSpaces = new ArrayList<String>();
 
 		// Spaces to the left of the rook
 		for (int i = getFile(); i >= (int) 'A'; i--) {
-			rookMoves.add(""+(char) i + getRank());
+			leftSpaces.add(""+(char) i + getRank());
 		}
+
+		return leftSpaces;
+	}
+	
+	public ArrayList<String> getMoves() {
+		ArrayList<String> rookMoves = new ArrayList<String>();
+		rookMoves.addAll(getFrontSpaces());
+		rookMoves.addAll(getBackSpaces());
+		rookMoves.addAll(getRightSpaces());
+		rookMoves.addAll(getLeftSpaces());
 
         return rookMoves;
 	}
