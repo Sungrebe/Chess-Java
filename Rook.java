@@ -21,7 +21,7 @@ public class Rook extends ChessPiece {
 		ArrayList<String> backSpaces = new ArrayList<String>();
 
 		// Spaces behind the rook
-		for (int i = getRank() - 1; i > 1; i--) {
+		for (int i = getRank() - 1; i >= 1; i--) {
 			backSpaces.add(""+getFile() + i);
 		}
 
