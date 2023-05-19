@@ -87,3 +87,19 @@ public class Bishop extends ChessPiece {
 	}
 
 }
+
+/*
+	public boolean isBlocked(destX, destY) {
+		for (String[] spaceRow : spaces) {
+			for (String space : spaceRow) {
+				if (!space.equals("") && space.substring(0, 2).equals("Bb")) {
+
+				}
+			}
+		}
+	}
+
+ * public boolean isValidMove(int srcX, int srcY, int destX, int destY) {
+ * 	return Math.abs(destY - srcY) == Math.abs(destX - srcX) && !isBlocked(destX, destY);
+ * }
+ */

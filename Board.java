@@ -322,26 +322,26 @@ public class Board extends JComponent implements MouseListener {
             }
 
             if (firstBlockedDiag1 >= 0) {
-                for (int i = firstDiagMoves.size() - 1; i >= firstBlockedDiag1 + 2; i--) {
+                for (int i = firstDiagMoves.size() - 1; i >= firstBlockedDiag1 + 1; i--) {
                     System.out.println(firstDiagMoves.get(i));
                     firstDiagMoves.remove(i);
                 }
             }
 
             if (firstBlockedDiag2 >= 0) {
-                for (int i = secondDiagMoves.size() - 1; i >= firstBlockedDiag2 + 2; i--) {
+                for (int i = secondDiagMoves.size() - 1; i >= firstBlockedDiag2 + 1; i--) {
                     secondDiagMoves.remove(i);
                 }
             }
 
             if (firstBlockedDiag3 >= 0) {
-                for (int i = thirdDiagMoves.size() - 1; i >= firstBlockedDiag3 + 2; i--) {
+                for (int i = thirdDiagMoves.size() - 1; i >= firstBlockedDiag3 + 1; i--) {
                     thirdDiagMoves.remove(i);
                 }
             }
 
             if (firstBlockedDiag4 >= 0) {
-                for (int i = fourthDiagMoves.size() - 1; i >= firstBlockedDiag4 + 2; i--) {
+                for (int i = fourthDiagMoves.size() - 1; i >= firstBlockedDiag4 + 1; i--) {
                     fourthDiagMoves.remove(i);
                 }
             }
@@ -363,18 +363,18 @@ public class Board extends JComponent implements MouseListener {
 
         if (cp.isRook()) {
             Rook r = (Rook) cp;
-            ArrayList<String> frontMoves = r.getFrontSpaces();
-            ArrayList<String> backMoves = r.getBackSpaces();
-            ArrayList<String> leftMoves = r.getLeftSpaces();
-            ArrayList<String> rightMoves = r.getRightSpaces();
+            ArrayList<String> frontSpaces = r.getFrontSpaces();
+            ArrayList<String> backSpaces = r.getBackSpaces();
+            ArrayList<String> leftSpaces = r.getLeftSpaces();
+            ArrayList<String> rightSpaces = r.getRightSpaces();
 
-            int firstBlockedFront = frontMoves.size() - 1;
-            int firstBlockedBack = frontMoves.size() - 1;
-            int firstBlockedLeft = frontMoves.size() - 1;
-            int firstBlockedRight = frontMoves.size() - 1;
+            int firstBlockedFront = frontSpaces.size() - 1;
+            int firstBlockedBack = backSpaces.size() - 1;
+            int firstBlockedLeft = leftSpaces.size() - 1;
+            int firstBlockedRight = rightSpaces.size() - 1;
 
-            for (int i = 0; i < frontMoves.size(); i++) {
-                String frontCoord = frontMoves.get(i);
+            for (int i = 0; i < frontSpaces.size(); i++) {
+                String frontCoord = frontSpaces.get(i);
                 char frontCoordFile = frontCoord.charAt(0);
                 int frontCoordRank = Integer.parseInt(frontCoord, 1, 2, 10);
 
@@ -384,8 +384,8 @@ public class Board extends JComponent implements MouseListener {
                 }
             }
 
-            for (int i = 0; i < backMoves.size(); i++) {
-                String backCoord = backMoves.get(i);
+            for (int i = 0; i < backSpaces.size(); i++) {
+                String backCoord = backSpaces.get(i);
                 char backCoordFile = backCoord.charAt(0);
                 int backCoordRank = Integer.parseInt(backCoord, 1, 2, 10);
 
@@ -395,8 +395,8 @@ public class Board extends JComponent implements MouseListener {
                 }
             }
 
-            for (int i = 0; i < leftMoves.size(); i++) {
-                String leftCoord = leftMoves.get(i);
+            for (int i = 0; i < leftSpaces.size(); i++) {
+                String leftCoord = leftSpaces.get(i);
                 char leftCoordFile = leftCoord.charAt(0);
                 int leftCoordRank = Integer.parseInt(leftCoord, 1, 2, 10);
 
@@ -406,8 +406,8 @@ public class Board extends JComponent implements MouseListener {
                 }
             }
 
-            for (int i = 0; i < rightMoves.size(); i++) {
-                String rightCoord = rightMoves.get(i);
+            for (int i = 0; i < rightSpaces.size(); i++) {
+                String rightCoord = rightSpaces.get(i);
                 char rightCoordFile = rightCoord.charAt(0);
                 int rightCoordRank = Integer.parseInt(rightCoord, 1, 2, 10);
 
@@ -418,42 +418,42 @@ public class Board extends JComponent implements MouseListener {
             }
 
             if (firstBlockedFront >= 0) {
-                for (int i = frontMoves.size() - 1; i >= firstBlockedFront + 2; i--) {
-                    frontMoves.remove(i);
+                for (int i = frontSpaces.size() - 1; i >= firstBlockedFront + 1; i--) {
+                    frontSpaces.remove(i);
                 }
             }
 
             if (firstBlockedBack >= 0) {
-                for (int i = backMoves.size() - 1; i >= firstBlockedBack + 2; i--) {
-                    backMoves.remove(i);
+                for (int i = backSpaces.size() - 1; i >= firstBlockedBack + 1; i--) {
+                    backSpaces.remove(i);
                 }
             }
 
             if (firstBlockedLeft >= 0) {
-                for (int i = leftMoves.size() - 1; i >= firstBlockedLeft + 2; i--) {
-                    leftMoves.remove(i);
+                for (int i = leftSpaces.size() - 1; i >= firstBlockedLeft + 1; i--) {
+                    leftSpaces.remove(i);
                 }
             }
 
             if (firstBlockedRight >= 0) {
-                for (int i = rightMoves.size() - 1; i >= firstBlockedRight + 2; i--) {
-                    rightMoves.remove(i);
+                for (int i = rightSpaces.size() - 1; i >= firstBlockedRight + 1; i--) {
+                    rightSpaces.remove(i);
                 }
             }
 
             cpMoves.clear();
 
-            if (cp.getMoves().containsAll(frontMoves))
-                cpMoves.addAll(frontMoves);
+            if (cp.getMoves().containsAll(frontSpaces))
+                cpMoves.addAll(frontSpaces);
 
-            if (cp.getMoves().containsAll(backMoves))
-                cpMoves.addAll(backMoves);
+            if (cp.getMoves().containsAll(backSpaces))
+                cpMoves.addAll(backSpaces);
 
-            if (cp.getMoves().containsAll(leftMoves))
-                cpMoves.addAll(leftMoves);
+            if (cp.getMoves().containsAll(leftSpaces))
+                cpMoves.addAll(leftSpaces);
 
-            if (cp.getMoves().containsAll(rightMoves))
-                cpMoves.addAll(rightMoves);
+            if (cp.getMoves().containsAll(rightSpaces))
+                cpMoves.addAll(rightSpaces);
         }
 
         if (cp.isQueen()) {
@@ -540,6 +540,8 @@ public class Board extends JComponent implements MouseListener {
                 }
             }
 
+            cpMoves.clear();
+
             if (cp.getMoves().containsAll(firstDiagMoves))
                 cpMoves.addAll(firstDiagMoves);
 
@@ -552,18 +554,18 @@ public class Board extends JComponent implements MouseListener {
             if (cp.getMoves().containsAll(fourthDiagMoves))
                 cpMoves.addAll(fourthDiagMoves);
 
-                ArrayList<String> frontMoves = q.getFrontSpaces();
-                ArrayList<String> backMoves = q.getBackSpaces();
-                ArrayList<String> leftMoves = q.getLeftSpaces();
-                ArrayList<String> rightMoves = q.getRightSpaces();
+                ArrayList<String> frontSpaces = q.getFrontSpaces();
+                ArrayList<String> backSpaces = q.getBackSpaces();
+                ArrayList<String> leftSpaces = q.getLeftSpaces();
+                ArrayList<String> rightSpaces = q.getRightSpaces();
     
-                int firstBlockedFront = frontMoves.size() - 1;
-                int firstBlockedBack = frontMoves.size() - 1;
-                int firstBlockedLeft = frontMoves.size() - 1;
-                int firstBlockedRight = frontMoves.size() - 1;
+                int firstBlockedFront = frontSpaces.size() - 1;
+                int firstBlockedBack = backSpaces.size() - 1;
+                int firstBlockedLeft = leftSpaces.size() - 1;
+                int firstBlockedRight = rightSpaces.size() - 1;
     
-                for (int i = 0; i < frontMoves.size(); i++) {
-                    String frontCoord = frontMoves.get(i);
+                for (int i = 0; i < frontSpaces.size(); i++) {
+                    String frontCoord = frontSpaces.get(i);
                     char frontCoordFile = frontCoord.charAt(0);
                     int frontCoordRank = Integer.parseInt(frontCoord, 1, 2, 10);
     
@@ -573,8 +575,8 @@ public class Board extends JComponent implements MouseListener {
                     }
                 }
     
-                for (int i = 0; i < backMoves.size(); i++) {
-                    String backCoord = backMoves.get(i);
+                for (int i = 0; i < backSpaces.size(); i++) {
+                    String backCoord = backSpaces.get(i);
                     char backCoordFile = backCoord.charAt(0);
                     int backCoordRank = Integer.parseInt(backCoord, 1, 2, 10);
     
@@ -584,8 +586,8 @@ public class Board extends JComponent implements MouseListener {
                     }
                 }
     
-                for (int i = 0; i < leftMoves.size(); i++) {
-                    String leftCoord = leftMoves.get(i);
+                for (int i = 0; i < leftSpaces.size(); i++) {
+                    String leftCoord = leftSpaces.get(i);
                     char leftCoordFile = leftCoord.charAt(0);
                     int leftCoordRank = Integer.parseInt(leftCoord, 1, 2, 10);
     
@@ -595,8 +597,8 @@ public class Board extends JComponent implements MouseListener {
                     }
                 }
     
-                for (int i = 0; i < rightMoves.size(); i++) {
-                    String rightCoord = rightMoves.get(i);
+                for (int i = 0; i < rightSpaces.size(); i++) {
+                    String rightCoord = rightSpaces.get(i);
                     char rightCoordFile = rightCoord.charAt(0);
                     int rightCoordRank = Integer.parseInt(rightCoord, 1, 2, 10);
     
@@ -607,82 +609,48 @@ public class Board extends JComponent implements MouseListener {
                 }
     
                 if (firstBlockedFront >= 0) {
-                    for (int i = frontMoves.size() - 1; i >= firstBlockedFront + 2; i--) {
-                        frontMoves.remove(i);
+                    for (int i = frontSpaces.size() - 1; i >= firstBlockedFront + 1; i--) {
+                        frontSpaces.remove(i);
                     }
                 }
     
                 if (firstBlockedBack >= 0) {
-                    for (int i = backMoves.size() - 1; i >= firstBlockedBack + 2; i--) {
-                        backMoves.remove(i);
+                    for (int i = backSpaces.size() - 1; i >= firstBlockedBack + 1; i--) {
+                        backSpaces.remove(i);
                     }
                 }
     
                 if (firstBlockedLeft >= 0) {
-                    for (int i = leftMoves.size() - 1; i >= firstBlockedLeft + 2; i--) {
-                        leftMoves.remove(i);
+                    for (int i = leftSpaces.size() - 1; i >= firstBlockedLeft + 1; i--) {
+                        leftSpaces.remove(i);
                     }
                 }
     
                 if (firstBlockedRight >= 0) {
-                    for (int i = rightMoves.size() - 1; i >= firstBlockedRight + 2; i--) {
-                        rightMoves.remove(i);
+                    for (int i = rightSpaces.size() - 1; i >= firstBlockedRight + 1; i--) {
+                        rightSpaces.remove(i);
                     }
                 }
-
-                if (cp.getMoves().containsAll(frontMoves))
-                    cpMoves.addAll(frontMoves);
     
-                if (cp.getMoves().containsAll(backMoves))
-                    cpMoves.addAll(backMoves);
+                cpMoves.clear();
     
-                if (cp.getMoves().containsAll(leftMoves))
-                    cpMoves.addAll(leftMoves);
+                if (cp.getMoves().containsAll(frontSpaces))
+                    cpMoves.addAll(frontSpaces);
     
-                if (cp.getMoves().containsAll(rightMoves))
-                    cpMoves.addAll(rightMoves);
+                if (cp.getMoves().containsAll(backSpaces))
+                    cpMoves.addAll(backSpaces);
+    
+                if (cp.getMoves().containsAll(leftSpaces))
+                    cpMoves.addAll(leftSpaces);
+    
+                if (cp.getMoves().containsAll(rightSpaces))
+                    cpMoves.addAll(rightSpaces);
         }
 
         return cpMoves;
     }
 
-    private void isCausingCheck(char sourceF, int sourceR) {
-        // If another piece's moves contain either the white king or black king pos, and
-        // that piece is on the opposite
-        // side of the king being checked, then that would be considered check
-        ChessPiece aCp = spaces[8 - sourceR][(int) sourceF - 'A'].getCp();
-
-        if (aCp != null && aCp.isWhite() && aCp.isKing()) {
-            whiteInCheck = false;
-        } else if (aCp != null && aCp.isBlack() && aCp.isKing()) {
-            blackInCheck = false;
-        }
-
-        if (aCp != null && !aCp.isKing()) {
-            if (aCp.isBlack()) {
-                blackInCheck = false;
-
-                if (aCp.getMoves().contains(whiteKingPos)) {
-                    whiteInCheck = true;
-                    System.out.println("white in check: " + whiteInCheck);
-                } else {
-                    whiteInCheck = false;
-                }
-            } else if (aCp.isWhite()) {
-                whiteInCheck = false;
-                
-                if (aCp.getMoves().contains(blackKingPos)) {
-                    blackInCheck = true;
-                } else {
-                    blackInCheck = false;
-                }
-            }
-        }
-    }
-
     public void movePiece() {
-        isCausingCheck(destFile, destRank);
-
         int sourceRow = 8 - sourceRank;
         int sourceCol = (int) sourceFile - 'A';
 
@@ -765,8 +733,7 @@ public class Board extends JComponent implements MouseListener {
                     // so, then the piece cannot
                     // move there as it would be capturing a piece on its own side)
 
-                    if (!whiteInCheck) {
-                        if ((spaces[destRow][destCol].getCp() == null)
+                    if ((spaces[destRow][destCol].getCp() == null)
                                 || (spaces[destRow][destCol].getCp() != null
                                         && !spaces[destRow][destCol].getCp().sameSide(thisCp))) {
 
@@ -788,7 +755,6 @@ public class Board extends JComponent implements MouseListener {
 
                         // Switch turns between players
                         switchTurns();
-                    }
                 }
             }
         }
@@ -827,39 +793,7 @@ public class Board extends JComponent implements MouseListener {
                 }
             }
 
-            System.out.println(whiteCastlingValid);
-            System.out.println(blackCastlingValid);
-
-            if (whiteInCheck || blackInCheck) {
-                if (whiteInCheck) {
-                    if (!whiteInCheck) {
-                        whiteToMove = false;
-                        blackToMove = true;
-                    } else {
-                        JOptionPane.showMessageDialog(null, "White in check");
-                        isCausingCheck(sourceFile, sourceRank);
-
-                        whiteToMove = true;
-                        blackToMove = false;
-                    }
-                }
-
-                if (blackInCheck) {
-                    if (!blackInCheck) {
-                        whiteToMove = true;
-                        blackToMove = false;
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Black in check");
-                        isCausingCheck(sourceFile, sourceRank);
-
-                        whiteToMove = false;
-                        blackToMove = true;
-                    }
-                }
-            } else {
-                movePiece();
-                isCausingCheck(destFile, destRank);
-            }
+            movePiece();
         } else if (numClicks % 3 == 0) {
             // If the number of clicks is divisible by three, then reset the click count to
             // 0 (so that the user can make a second move)
