@@ -5,7 +5,13 @@ public class King extends ChessPiece {
 	public King(char file, int rank, String side) {
 		super("king", file, rank, side);
 	}
-
+	
+	/**
+	* 
+	* @param none
+	* @return kingMoves - ArrayList<String>
+	*/
+	
 	public ArrayList<String> getMoves() {
 		ArrayList<String> kingMoves = new ArrayList<String>();
 
