@@ -64,8 +64,8 @@ public class Queen extends ChessPiece {
 	public ArrayList<String> getFrontSpaces() {
 		ArrayList<String> frontSpaces = new ArrayList<String>();
 
-		// Spaces in front of the queen
-		for (int i = getRank(); i <= 8; i++) {
+		// Spaces in front of the rook
+		for (int i = getRank() + 1; i <= 8; i++) {
 			frontSpaces.add(""+getFile() + i);
 		}
 
@@ -75,8 +75,8 @@ public class Queen extends ChessPiece {
 	public ArrayList<String> getBackSpaces() {
 		ArrayList<String> backSpaces = new ArrayList<String>();
 
-		// Spaces behind the queen
-		for (int i = getRank(); i > 1; i--) {
+		// Spaces behind the rook
+		for (int i = getRank() - 1; i > 1; i--) {
 			backSpaces.add(""+getFile() + i);
 		}
 
@@ -86,8 +86,8 @@ public class Queen extends ChessPiece {
 	public ArrayList<String> getRightSpaces() {
 		ArrayList<String> rightSpaces = new ArrayList<String>();
 
-		// Spaces to the right of the queen
-		for (int i = getFile(); i <= (int) 'H'; i++) {
+		// Spaces to the right of the rook
+		for (int i = getFile() + 1; i <= (int) 'H'; i++) {
 			rightSpaces.add(""+(char) i + getRank());
 		}
 
@@ -98,7 +98,7 @@ public class Queen extends ChessPiece {
 		ArrayList<String> leftSpaces = new ArrayList<String>();
 
 		// Spaces to the left of the rook
-		for (int i = getFile(); i >= (int) 'A'; i--) {
+		for (int i = getFile() - 1; i >= (int) 'A'; i--) {
 			leftSpaces.add(""+(char) i + getRank());
 		}
 

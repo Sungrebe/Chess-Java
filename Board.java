@@ -221,10 +221,14 @@ public class Board extends JComponent implements MouseListener {
 
         if (cp.isKing()) {
             // Handle castling
-            if ((cp.isWhite() && whiteCastlingValid && spaces[cpRow][cpCol + 1].getCp() == null
-                    && spaces[cpRow][cpCol + 2].getCp() == null) ||
-                    (cp.isBlack() && blackCastlingValid && spaces[cpRow][cpCol + 1].getCp() == null
-                            && spaces[cpRow][cpCol + 2].getCp() == null)) {
+            if (
+                (cp.isWhite() && 
+                whiteCastlingValid && 
+                destRank == sourceRank &&
+                destFile == sourceFile + 2 &&
+                spaces[cpRow][cpCol + 1].getCp() == null && spaces[cpRow][cpCol + 2].getCp() == null) 
+                || (cp.isBlack() && blackCastlingValid && spaces[cpRow][cpCol + 1].getCp() == null
+                && spaces[cpRow][cpCol + 2].getCp() == null)) {
                 cpMoves.add("" + (char) ((int) 'A' + cpRow) + (8 - cpCol - 2));
 
                 spaces[cpRow][cpCol + 2].setCp(spaces[cpRow][cpCol].getCp());
@@ -240,7 +244,8 @@ public class Board extends JComponent implements MouseListener {
                     blackCastlingValid = false;
 
                 switchTurns();
-            } else if ((cp.isWhite() && whiteCastlingValid && spaces[cpRow][cpCol - 1].getCp() == null
+            } else if ((cp.isWhite() && whiteCastlingValid && destRank == sourceRank &&
+            destFile == sourceFile - 2 && spaces[cpRow][cpCol - 1].getCp() == null
                     && spaces[cpRow][cpCol - 2].getCp() == null) ||
                     (cp.isBlack() && blackCastlingValid && spaces[cpRow][cpCol - 1].getCp() == null
                             && spaces[cpRow][cpCol - 2].getCp() == null)) {
@@ -282,7 +287,9 @@ public class Board extends JComponent implements MouseListener {
                 char diag1CoordFile = diag1Coord.charAt(0);
                 int diag1CoordRank = Integer.parseInt(diag1Coord, 1, 2, 10);
 
-                if (spaces[8 - diag1CoordRank][(int) diag1CoordFile - 'A'].getCp() != null) {
+                if (
+                    spaces[8 - diag1CoordRank][(int) diag1CoordFile - 'A'].getCp() != null
+                ) {
                     firstBlockedDiag1 = i;
                     break;
                 }
@@ -293,7 +300,9 @@ public class Board extends JComponent implements MouseListener {
                 char diag2CoordFile = diag2Coord.charAt(0);
                 int diag2CoordRank = Integer.parseInt(diag2Coord, 1, 2, 10);
 
-                if (spaces[8 - diag2CoordRank][(int) diag2CoordFile - 'A'].getCp() != null) {
+                if (
+                    spaces[8 - diag2CoordRank][(int) diag2CoordFile - 'A'].getCp() != null
+                ) {
                     firstBlockedDiag2 = i;
                     break;
                 }
@@ -304,7 +313,9 @@ public class Board extends JComponent implements MouseListener {
                 char diag3CoordFile = diag3Coord.charAt(0);
                 int diag3CoordRank = Integer.parseInt(diag3Coord, 1, 2, 10);
 
-                if (spaces[8 - diag3CoordRank][(int) diag3CoordFile - 'A'].getCp() != null) {
+                if (
+                    spaces[8 - diag3CoordRank][(int) diag3CoordFile - 'A'].getCp() != null
+                ) {
                     firstBlockedDiag3 = i;
                     break;
                 }
@@ -315,15 +326,17 @@ public class Board extends JComponent implements MouseListener {
                 char diag4CoordFile = diag4Coord.charAt(0);
                 int diag4CoordRank = Integer.parseInt(diag4Coord, 1, 2, 10);
 
-                if (spaces[8 - diag4CoordRank][(int) diag4CoordFile - 'A'].getCp() != null) {
+                if (
+                    spaces[8 - diag4CoordRank][(int) diag4CoordFile - 'A'].getCp() != null
+                ) {
                     firstBlockedDiag4 = i;
                     break;
                 }
             }
 
             if (firstBlockedDiag1 >= 0) {
-                for (int i = firstDiagMoves.size() - 1; i >= firstBlockedDiag1 + 1; i--) {
-                    System.out.println(firstDiagMoves.get(i));
+                for (int i = firstDiagMoves.size() - 1; i >= firstBlockedDiag1 + 2; i--) {
+                    System.out.print(firstDiagMoves.get(i) + " ");
                     firstDiagMoves.remove(i);
                 }
             }
@@ -336,12 +349,14 @@ public class Board extends JComponent implements MouseListener {
 
             if (firstBlockedDiag3 >= 0) {
                 for (int i = thirdDiagMoves.size() - 1; i >= firstBlockedDiag3 + 1; i--) {
+                    System.out.print(thirdDiagMoves.get(i) + " ");
                     thirdDiagMoves.remove(i);
                 }
             }
 
             if (firstBlockedDiag4 >= 0) {
                 for (int i = fourthDiagMoves.size() - 1; i >= firstBlockedDiag4 + 1; i--) {
+                    System.out.print(fourthDiagMoves.get(i) + " ");
                     fourthDiagMoves.remove(i);
                 }
             }
@@ -359,6 +374,8 @@ public class Board extends JComponent implements MouseListener {
 
             if (cp.getMoves().containsAll(fourthDiagMoves))
                 cpMoves.addAll(fourthDiagMoves);
+
+            System.out.println("bishop's moves: " + cpMoves);
         }
 
         if (cp.isRook()) {
@@ -378,7 +395,9 @@ public class Board extends JComponent implements MouseListener {
                 char frontCoordFile = frontCoord.charAt(0);
                 int frontCoordRank = Integer.parseInt(frontCoord, 1, 2, 10);
 
-                if (spaces[8 - frontCoordRank][(int) frontCoordFile - 'A'].getCp() != null) {
+                if (
+                    spaces[8 - frontCoordRank][(int) frontCoordFile - 'A'].getCp() != null
+                ) {
                     firstBlockedFront = i;
                     break;
                 }
@@ -389,7 +408,9 @@ public class Board extends JComponent implements MouseListener {
                 char backCoordFile = backCoord.charAt(0);
                 int backCoordRank = Integer.parseInt(backCoord, 1, 2, 10);
 
-                if (spaces[8 - backCoordRank][(int) backCoordFile - 'A'].getCp() != null) {
+                if (
+                    spaces[8 - backCoordRank][(int) backCoordFile - 'A'].getCp() != null
+                ) {
                     firstBlockedBack = i;
                     break;
                 }
@@ -400,7 +421,9 @@ public class Board extends JComponent implements MouseListener {
                 char leftCoordFile = leftCoord.charAt(0);
                 int leftCoordRank = Integer.parseInt(leftCoord, 1, 2, 10);
 
-                if (spaces[8 - leftCoordRank][(int) leftCoordFile - 'A'].getCp() != null) {
+                if (
+                    spaces[8 - leftCoordRank][(int) leftCoordFile - 'A'].getCp() != null
+                ) {
                     firstBlockedLeft = i;
                     break;
                 }
@@ -411,7 +434,9 @@ public class Board extends JComponent implements MouseListener {
                 char rightCoordFile = rightCoord.charAt(0);
                 int rightCoordRank = Integer.parseInt(rightCoord, 1, 2, 10);
 
-                if (spaces[8 - rightCoordRank][(int) rightCoordFile - 'A'].getCp() != null) {
+                if (
+                    spaces[8 - rightCoordRank][(int) rightCoordFile - 'A'].getCp() != null
+                ) {
                     firstBlockedRight = i;
                     break;
                 }
@@ -476,7 +501,9 @@ public class Board extends JComponent implements MouseListener {
                 char diag1CoordFile = diag1Coord.charAt(0);
                 int diag1CoordRank = Integer.parseInt(diag1Coord, 1, 2, 10);
 
-                if (spaces[8 - diag1CoordRank][(int) diag1CoordFile - 'A'].getCp() != null) {
+                if (
+                    spaces[8 - diag1CoordRank][(int) diag1CoordFile - 'A'].getCp() != null
+                ) {
                     firstBlockedDiag1 = i;
                     break;
                 }
@@ -487,7 +514,9 @@ public class Board extends JComponent implements MouseListener {
                 char diag2CoordFile = diag2Coord.charAt(0);
                 int diag2CoordRank = Integer.parseInt(diag2Coord, 1, 2, 10);
 
-                if (spaces[8 - diag2CoordRank][(int) diag2CoordFile - 'A'].getCp() != null) {
+                if (
+                    spaces[8 - diag2CoordRank][(int) diag2CoordFile - 'A'].getCp() != null
+                ) {
                     firstBlockedDiag2 = i;
                     break;
                 }
@@ -498,7 +527,9 @@ public class Board extends JComponent implements MouseListener {
                 char diag3CoordFile = diag3Coord.charAt(0);
                 int diag3CoordRank = Integer.parseInt(diag3Coord, 1, 2, 10);
 
-                if (spaces[8 - diag3CoordRank][(int) diag3CoordFile - 'A'].getCp() != null) {
+                if (
+                    spaces[8 - diag3CoordRank][(int) diag3CoordFile - 'A'].getCp() != null
+                ) {
                     firstBlockedDiag3 = i;
                     break;
                 }
@@ -509,7 +540,9 @@ public class Board extends JComponent implements MouseListener {
                 char diag4CoordFile = diag4Coord.charAt(0);
                 int diag4CoordRank = Integer.parseInt(diag4Coord, 1, 2, 10);
 
-                if (spaces[8 - diag4CoordRank][(int) diag4CoordFile - 'A'].getCp() != null) {
+                if (
+                    spaces[8 - diag4CoordRank][(int) diag4CoordFile - 'A'].getCp() != null
+                ) {
                     firstBlockedDiag4 = i;
                     break;
                 }
@@ -551,8 +584,9 @@ public class Board extends JComponent implements MouseListener {
             if (cp.getMoves().containsAll(thirdDiagMoves))
                 cpMoves.addAll(thirdDiagMoves);
 
-            if (cp.getMoves().containsAll(fourthDiagMoves))
+            if (cp.getMoves().containsAll(fourthDiagMoves)) {
                 cpMoves.addAll(fourthDiagMoves);
+            }
 
                 ArrayList<String> frontSpaces = q.getFrontSpaces();
                 ArrayList<String> backSpaces = q.getBackSpaces();
@@ -569,7 +603,9 @@ public class Board extends JComponent implements MouseListener {
                     char frontCoordFile = frontCoord.charAt(0);
                     int frontCoordRank = Integer.parseInt(frontCoord, 1, 2, 10);
     
-                    if (spaces[8 - frontCoordRank][(int) frontCoordFile - 'A'].getCp() != null) {
+                    if (
+                        spaces[8 - frontCoordRank][(int) frontCoordFile - 'A'].getCp() != null
+                    ) {
                         firstBlockedFront = i;
                         break;
                     }
@@ -580,7 +616,9 @@ public class Board extends JComponent implements MouseListener {
                     char backCoordFile = backCoord.charAt(0);
                     int backCoordRank = Integer.parseInt(backCoord, 1, 2, 10);
     
-                    if (spaces[8 - backCoordRank][(int) backCoordFile - 'A'].getCp() != null) {
+                    if (
+                        spaces[8 - backCoordRank][(int) backCoordFile - 'A'].getCp() != null
+                    ) {
                         firstBlockedBack = i;
                         break;
                     }
@@ -591,7 +629,9 @@ public class Board extends JComponent implements MouseListener {
                     char leftCoordFile = leftCoord.charAt(0);
                     int leftCoordRank = Integer.parseInt(leftCoord, 1, 2, 10);
     
-                    if (spaces[8 - leftCoordRank][(int) leftCoordFile - 'A'].getCp() != null) {
+                    if (
+                        spaces[8 - leftCoordRank][(int) leftCoordFile - 'A'].getCp() != null
+                    ) {
                         firstBlockedLeft = i;
                         break;
                     }
@@ -602,7 +642,9 @@ public class Board extends JComponent implements MouseListener {
                     char rightCoordFile = rightCoord.charAt(0);
                     int rightCoordRank = Integer.parseInt(rightCoord, 1, 2, 10);
     
-                    if (spaces[8 - rightCoordRank][(int) rightCoordFile - 'A'].getCp() != null) {
+                    if (
+                        spaces[8 - rightCoordRank][(int) rightCoordFile - 'A'].getCp() != null
+                    ) {
                         firstBlockedRight = i;
                         break;
                     }
@@ -631,8 +673,6 @@ public class Board extends JComponent implements MouseListener {
                         rightSpaces.remove(i);
                     }
                 }
-    
-                cpMoves.clear();
     
                 if (cp.getMoves().containsAll(frontSpaces))
                     cpMoves.addAll(frontSpaces);

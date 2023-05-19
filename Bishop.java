@@ -13,11 +13,13 @@ public class Bishop extends ChessPiece {
 		ArrayList<String> diagonal1Moves = new ArrayList<String>();
 
 		// Diagonal where file is decreasing and rank increasing
-		while ((char) file >= 'B' && rank < 8) {
+		while ((char) file - 1 >= 'A' && rank + 1 < 8) {
 			diagonal1Moves.add(""+(char) (file - 1) + (rank + 1));
 			file--;
 			rank++;
 		}
+
+		System.out.println("diagonal 1 moves (original): " + diagonal1Moves);
 
 		return diagonal1Moves;
 	}
@@ -26,7 +28,7 @@ public class Bishop extends ChessPiece {
 		ArrayList<String> diagonal2Moves = new ArrayList<String>();
 
 		// Diagonal where file is increasing and rank increasing
-		while ((char) file <= 'G' && rank < 8) {
+		while ((char) file + 1 <= 'H' && rank + 1 < 8) {
 			diagonal2Moves.add(""+(char) (file + 1) + (rank + 1));
 			file++;
 			rank++;
@@ -39,7 +41,7 @@ public class Bishop extends ChessPiece {
 		ArrayList<String> diagonal3Moves = new ArrayList<String>();
 
 		// Diagonal where file is decreasing and rank decreasing
-		while ((char) file >= 'B' && rank > 1) {
+		while ((char) file - 1 >= 'A' && rank - 1 > 1) {
 			diagonal3Moves.add(""+(char) (file - 1) + (rank - 1));
 			file--;
 			rank--;
@@ -52,7 +54,7 @@ public class Bishop extends ChessPiece {
 		ArrayList<String> diagonal4Moves = new ArrayList<String>();
 
 		// Diagonal where file is increasing and rank decreasing
-		while ((char) file <= 'G' && rank > 1) {
+		while ((char) file + 1 <= 'H' && rank - 1 > 1) {
 			diagonal4Moves.add(""+(char) (file + 1) + (rank - 1));
 			file++;
 			rank--;
