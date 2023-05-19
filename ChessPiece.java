@@ -16,16 +16,26 @@ public abstract class ChessPiece {
 
 	/** 
 	* 
-	* @return name - 
+	* @return String name 
 	*/
 	public String getName() {
 		return name;
 	}
-
+	
+	/**
+	* 
+	* @param none
+	* @return char file
+	*/
 	public char getFile() {
 		return file;
 	}
-
+	
+	/**
+	* 
+	* @param none
+	* @return int rank
+	*/
 	public int getRank() {
 		return rank;
 	}
