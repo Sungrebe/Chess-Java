@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
+/**
+ * The Board class handles the board and its pieces
+ */
 public class Board extends JComponent implements MouseListener {
 
     private Space[][] spaces;
@@ -34,6 +37,9 @@ public class Board extends JComponent implements MouseListener {
     private String blackCheckingPiecePos = ""; // current white piece that is checking black
     private String whiteCheckingPiecePos = ""; // current black piece that is checking white
 
+    /**
+     * The Board construtor handles the layout of the board and its pieces
+     */
     public Board() {
         spaces = new Space[8][8];
 
@@ -118,6 +124,10 @@ public class Board extends JComponent implements MouseListener {
         addMouseListener(this);
     }
 
+    /**
+     * This method handles the painting of the board and its pieces
+     * @param g the graphics object that handles the painting
+     */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
@@ -144,6 +154,13 @@ public class Board extends JComponent implements MouseListener {
         }
     }
 
+    /**
+     * This method validates the moves that chess pieces can make by handling blocking and special moves such as capturing
+     * @param cpRow the row of the chess piece
+     * @param cpCol the col of the chess piece
+     * @param cp the chess piece itself
+     * @return an arraylist containing valid moves for a given chess piece
+     */
     public ArrayList<String> getValidMoves(int cpRow, int cpCol, ChessPiece cp) {
         ArrayList<String> cpMoves = cp.getMoves();
 
@@ -688,6 +705,10 @@ public class Board extends JComponent implements MouseListener {
         return cpMoves;
     }
 
+    /**
+     * This is the method that handles movement of the actual chess piece. It takes into account the new position based on which space the user
+     * selects to move to.
+     */
     public void movePiece() {
         int sourceRow = 8 - sourceRank;
         int sourceCol = (int) sourceFile - 'A';
@@ -798,6 +819,9 @@ public class Board extends JComponent implements MouseListener {
         }
     }
 
+    /**
+     * This method swtiches the turns of the users, black switches to white and white switches to black
+     */
     public void switchTurns() {
         if (whiteToMove) {
             whiteToMove = false;
@@ -808,6 +832,11 @@ public class Board extends JComponent implements MouseListener {
         }
     }
 
+    /**
+     * This method checks whether a piece is causing check on the King of the opposing side
+     * @param sourceF the source file or source column of the piece
+     * @param sourceR the source rank or source row of the piece
+     */
     public void isCausingCheck(char sourceF, int sourceR) {
         // If another piece's moves contain either the white king or black king pos, and
         // that piece is on the opposite
@@ -833,6 +862,9 @@ public class Board extends JComponent implements MouseListener {
         }
     }
 
+    /**
+     * This method allows for the move of a piece to be undone.
+     */
     public void undoMove() {
         spaces[8 - sourceRank][(int) sourceFile - 'A'].setCp(spaces[8 - destRank][(int) destFile - 'A'].getCp());
         spaces[8 - destRank][(int) destFile - 'A'].removeCp();
@@ -840,6 +872,10 @@ public class Board extends JComponent implements MouseListener {
         repaint();
     }
 
+    /**
+     * The mouse pressed method handles determining the source coordinate and end coordinates based on where the user presses
+     * @param evt the mouse event of pressing
+     */
     public void mousePressed(MouseEvent evt) {
         numClicks++;
 
@@ -948,6 +984,9 @@ public class Board extends JComponent implements MouseListener {
     public void mouseExited(MouseEvent evt) {
     }
 
+    /**
+     * The Space class handles the actual spaces of the chess board
+     */
     class Space {
 
         private int row;
@@ -955,22 +994,39 @@ public class Board extends JComponent implements MouseListener {
 
         private ChessPiece cp;
 
+        /**
+         * The space constructor creates a space instance
+         * @param row the row of the space
+         * @param col the column of the space
+         * @param cp the chess piece of the space
+         */
         public Space(int row, int col, ChessPiece cp) {
             this.row = row;
             this.col = col;
             this.cp = cp;
         }
 
+        /**
+         * Getter method for the chess piece
+         * @return the chess piece
+         */
         public ChessPiece getCp() {
             return cp;
         }
 
+        /**
+         * The chess piece setter method
+         * @param newChessPiece the chess piece to set the chess piece to
+         */
         public void setCp(ChessPiece newChessPiece) {
             newChessPiece.setFile((char) ((int) 'A' + col));
             newChessPiece.setRank(8 - row);
             cp = newChessPiece;
         }
 
+        /**
+         * This method removes the chess piece by setting it to null
+         */
         public void removeCp() {
             cp = null;
         }
