@@ -32,8 +32,6 @@ public class Bishop extends ChessPiece {
 			rank++;
 		}
 
-		System.out.println("diagonal 1 moves (original): " + diagonal1Moves);
-
 		return diagonal1Moves;
 	}
 
