@@ -32,6 +32,9 @@ public class Board extends JComponent implements MouseListener {
     private boolean blackInCheck = false;
     private boolean whiteInCheck = false;
 
+    private String blackCheckingPiecePos = ""; // current white piece that is checking black
+    private String whiteCheckingPiecePos = ""; // current black piece that is checking white
+
     public Board() {
         spaces = new Space[8][8];
 
@@ -227,7 +230,8 @@ public class Board extends JComponent implements MouseListener {
                 destRank == sourceRank &&
                 destFile == sourceFile + 2 &&
                 spaces[cpRow][cpCol + 1].getCp() == null && spaces[cpRow][cpCol + 2].getCp() == null) 
-                || (cp.isBlack() && blackCastlingValid && spaces[cpRow][cpCol + 1].getCp() == null
+                || (cp.isBlack() && blackCastlingValid && destRank == sourceRank &&
+                destFile == sourceFile + 2 && spaces[cpRow][cpCol + 1].getCp() == null
                 && spaces[cpRow][cpCol + 2].getCp() == null)) {
                 cpMoves.add("" + (char) ((int) 'A' + cpRow) + (8 - cpCol - 2));
 
@@ -247,7 +251,8 @@ public class Board extends JComponent implements MouseListener {
             } else if ((cp.isWhite() && whiteCastlingValid && destRank == sourceRank &&
             destFile == sourceFile - 2 && spaces[cpRow][cpCol - 1].getCp() == null
                     && spaces[cpRow][cpCol - 2].getCp() == null) ||
-                    (cp.isBlack() && blackCastlingValid && spaces[cpRow][cpCol - 1].getCp() == null
+                    (cp.isBlack() && blackCastlingValid && destRank == sourceRank &&
+                    destFile == sourceFile - 2 && spaces[cpRow][cpCol - 1].getCp() == null
                             && spaces[cpRow][cpCol - 2].getCp() == null)) {
                 cpMoves.add("" + (char) ((int) 'A' + cpRow) + (8 - cpCol + 2));
 
@@ -336,7 +341,6 @@ public class Board extends JComponent implements MouseListener {
 
             if (firstBlockedDiag1 >= 0) {
                 for (int i = firstDiagMoves.size() - 1; i >= firstBlockedDiag1 + 2; i--) {
-                    System.out.print(firstDiagMoves.get(i) + " ");
                     firstDiagMoves.remove(i);
                 }
             }
@@ -349,14 +353,12 @@ public class Board extends JComponent implements MouseListener {
 
             if (firstBlockedDiag3 >= 0) {
                 for (int i = thirdDiagMoves.size() - 1; i >= firstBlockedDiag3 + 1; i--) {
-                    System.out.print(thirdDiagMoves.get(i) + " ");
                     thirdDiagMoves.remove(i);
                 }
             }
 
             if (firstBlockedDiag4 >= 0) {
                 for (int i = fourthDiagMoves.size() - 1; i >= firstBlockedDiag4 + 1; i--) {
-                    System.out.print(fourthDiagMoves.get(i) + " ");
                     fourthDiagMoves.remove(i);
                 }
             }
@@ -374,8 +376,6 @@ public class Board extends JComponent implements MouseListener {
 
             if (cp.getMoves().containsAll(fourthDiagMoves))
                 cpMoves.addAll(fourthDiagMoves);
-
-            System.out.println("bishop's moves: " + cpMoves);
         }
 
         if (cp.isRook()) {
@@ -550,7 +550,6 @@ public class Board extends JComponent implements MouseListener {
 
             if (firstBlockedDiag1 >= 0) {
                 for (int i = firstDiagMoves.size() - 1; i >= firstBlockedDiag1 + 1; i--) {
-                    System.out.println(firstDiagMoves.get(i));
                     firstDiagMoves.remove(i);
                 }
             }
@@ -800,7 +799,7 @@ public class Board extends JComponent implements MouseListener {
         }
     }
 
-    private void switchTurns() {
+    public void switchTurns() {
         if (whiteToMove) {
             whiteToMove = false;
             blackToMove = true;
@@ -808,6 +807,38 @@ public class Board extends JComponent implements MouseListener {
             whiteToMove = true;
             blackToMove = false;
         }
+    }
+
+    public void isCausingCheck(char sourceF, int sourceR) {
+        // If another piece's moves contain either the white king or black king pos, and
+        // that piece is on the opposite
+        // side of the king being checked, then that would be considered check
+        ChessPiece aCp = spaces[8 - sourceR][(int) sourceF - 'A'].getCp();
+
+        if (aCp != null && !aCp.isKing()) {
+            if (aCp.isBlack()) {
+                if (getValidMoves(8 - sourceR, (int) sourceF - 'A', aCp).contains(whiteKingPos)) {
+                    whiteInCheck = true;
+                    JOptionPane.showMessageDialog(null, "White in check");
+                } else {
+                    whiteInCheck = false;
+                }
+            } else if (aCp.isWhite()) {
+                if (getValidMoves(8 - sourceR, (int) sourceF - 'A', aCp).contains(blackKingPos)) {
+                    blackInCheck = true;
+                    JOptionPane.showMessageDialog(null, "Black in check");
+                } else {
+                    blackInCheck = false;
+                }
+            }
+        }
+    }
+
+    public void undoMove() {
+        spaces[8 - sourceRank][(int) sourceFile - 'A'].setCp(spaces[8 - destRank][(int) destFile - 'A'].getCp());
+        spaces[8 - destRank][(int) destFile - 'A'].removeCp();
+
+        repaint();
     }
 
     public void mousePressed(MouseEvent evt) {
@@ -833,7 +864,72 @@ public class Board extends JComponent implements MouseListener {
                 }
             }
 
-            movePiece();
+            if (whiteInCheck || blackInCheck) {
+                if (whiteInCheck) {
+                    char wCheckingPieceFile = whiteCheckingPiecePos.charAt(0);
+                    int wCheckingPieceRank = Integer.parseInt(whiteCheckingPiecePos, 1, 2, 10);
+
+                    movePiece();
+
+                    if (spaces[8 - wCheckingPieceRank][(int) wCheckingPieceFile - 'A'].getCp().isWhite()) {
+                        whiteInCheck = false;
+
+                        whiteToMove = false;
+                        blackToMove = true;
+                    }
+
+                    isCausingCheck(wCheckingPieceFile, wCheckingPieceRank);
+
+                    if (blackInCheck) {
+                        undoMove();
+                        JOptionPane.showMessageDialog(null, "White still in check");
+
+                        whiteToMove = true;
+                        blackToMove = false;
+                    } else {
+                        whiteToMove = false;
+                        blackToMove = true;
+                    }
+                }
+
+                if (blackInCheck) {
+                    char bCheckingPieceFile = blackCheckingPiecePos.charAt(0);
+                    int bCheckingPieceRank = Integer.parseInt(blackCheckingPiecePos, 1, 2, 10);
+
+                    movePiece();
+
+                    if (spaces[8 - bCheckingPieceRank][(int) bCheckingPieceFile - 'A'].getCp().isBlack()) {
+                        blackInCheck = false;
+
+                        whiteToMove = true;
+                        blackToMove = false;
+                    }
+
+                    isCausingCheck(bCheckingPieceFile, bCheckingPieceRank);
+
+                    if (blackInCheck) {
+                        undoMove();
+                        JOptionPane.showMessageDialog(null, "Black still in check");
+
+                        whiteToMove = false;
+                        blackToMove = true;
+                    } else {
+                        whiteToMove = true;
+                        blackToMove = false;
+                    }
+                }
+            } else {
+                movePiece();
+                isCausingCheck(destFile, destRank);
+
+                if (blackInCheck) {
+                    blackCheckingPiecePos = ""+destFile + destRank;
+                }
+                
+                if (whiteInCheck) {
+                    whiteCheckingPiecePos = ""+destFile + destRank;
+                }
+            }
         } else if (numClicks % 3 == 0) {
             // If the number of clicks is divisible by three, then reset the click count to
             // 0 (so that the user can make a second move)
