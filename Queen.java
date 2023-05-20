@@ -1,14 +1,27 @@
 import java.util.ArrayList;
 
+/**
+ * The queen class handles the queen chess pieces and their movement
+ */
 public class Queen extends ChessPiece {
 
 	private int rank = getRank();
 	private int file = getFile();
 
+	/**
+	 * Queen constructor to create a queen object
+	 * @param file the alphabetical character corresponding to the column of the queen
+	 * @param rank the number corresponding to the row that the queen is on
+	 * @param side the side that the queen is on
+	 */
 	public Queen(char file, int rank, String side) {
 		super("queen", file, rank, side);
 	}
 
+	/**
+	 * This method determines which spaces the queen can move to in the direction of the top left diagonal
+	 * @return an arraylist with the moves along the top left diagonal of the queen
+	 */
 	public ArrayList<String> getDiagonal1Moves() {
 		ArrayList<String> diagonal1Moves = new ArrayList<String>();
 
@@ -22,6 +35,10 @@ public class Queen extends ChessPiece {
 		return diagonal1Moves;
 	}
 
+	/**
+	 * This method determines which spaces the queen can move to in the direction of the top right diagonal
+	 * @return an arraylist with the moves along the top right diagonal of the queen
+	 */
 	public ArrayList<String> getDiagonal2Moves() {
 		ArrayList<String> diagonal2Moves = new ArrayList<String>();
 
@@ -35,6 +52,10 @@ public class Queen extends ChessPiece {
 		return diagonal2Moves;
 	}
 
+	/**
+	 * This method determines which spaces the queen can move to in the direction of the bottom left diagonal
+	 * @return an arraylist with the moves along the bottom left diagonal of the queen
+	 */
 	public ArrayList<String> getDiagonal3Moves() {
 		ArrayList<String> diagonal3Moves = new ArrayList<String>();
 
@@ -48,6 +69,10 @@ public class Queen extends ChessPiece {
 		return diagonal3Moves;
 	}
 
+	/**
+	 * This method determines which spaces the queen can move to in the direction of the bottom right diagonal
+	 * @return an arraylist with the moves along the bottom right of the queen
+	 */
 	public ArrayList<String> getDiagonal4Moves() {
 		ArrayList<String> diagonal4Moves = new ArrayList<String>();
 
@@ -61,6 +86,10 @@ public class Queen extends ChessPiece {
 		return diagonal4Moves;
 	}
 
+	/**
+	 * This method determines which spaces the queen can move to in front of the queen
+	 * @return an arraylist with the moves in front of the queen
+	 */
 	public ArrayList<String> getFrontSpaces() {
 		ArrayList<String> frontSpaces = new ArrayList<String>();
 
@@ -72,6 +101,10 @@ public class Queen extends ChessPiece {
 		return frontSpaces;
 	}
 
+	/**
+	 * This method determines which spaces the queen can move to behind of the queen
+	 * @return an arraylist with the moves behind of the queen
+	 */
 	public ArrayList<String> getBackSpaces() {
 		ArrayList<String> backSpaces = new ArrayList<String>();
 
@@ -83,6 +116,10 @@ public class Queen extends ChessPiece {
 		return backSpaces;
 	}
 
+	/**
+	 * This method determines which spaces the queen can move to the right of the queen
+	 * @return an arraylist with the to the right of the queen
+	 */
 	public ArrayList<String> getRightSpaces() {
 		ArrayList<String> rightSpaces = new ArrayList<String>();
 
@@ -94,6 +131,10 @@ public class Queen extends ChessPiece {
 		return rightSpaces;
 	}
 
+	/**
+	 * This method determines which spaces the queen can move to the left of the queen
+	 * @return an arraylist with the moves to the left of the queen
+	 */
 	public ArrayList<String> getLeftSpaces() {
 		ArrayList<String> leftSpaces = new ArrayList<String>();
 
@@ -105,11 +146,18 @@ public class Queen extends ChessPiece {
 		return leftSpaces;
 	}
 
+	/**
+	 * This method resets the rank (row) and file (col) of the queen
+	 */
 	public void resetRankAndFile() {
 		rank = getRank();
 		file = getFile();
 	}
 
+	/**
+	 * This method returns an arraylist containing all the spaces that the queen piece can move to
+	 * @return an arraylist containing all the spaces that the queen can move to
+	 */
 	public ArrayList<String> getMoves() {
 		ArrayList<String> queenMoves = new ArrayList<String>();
 
