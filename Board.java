@@ -10,6 +10,8 @@ import javax.swing.*;
 public class Board extends JComponent implements MouseListener {
 
     private Space[][] spaces;
+    ArrayList<ChessPiece> blackPieces = new ArrayList<ChessPiece>(); // Black chess pieces
+    ArrayList<ChessPiece> whitePieces = new ArrayList<ChessPiece>(); // White chess pieces
 
     // Determine player turns
     private boolean whiteToMove;
