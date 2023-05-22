@@ -36,6 +36,8 @@ public class Board extends JComponent implements MouseListener {
 
     private String blackCheckingPiecePos = ""; // current white piece that is checking black
     private String whiteCheckingPiecePos = ""; // current black piece that is checking white
+    
+    private ChessPiece lastPieceCaptured; // Records the last chess piece that was captured (so that moves can be undone properly)
 
     /**
      * The Board construtor handles the layout of the board and its pieces
@@ -792,12 +794,22 @@ public class Board extends JComponent implements MouseListener {
                     // so, then the piece cannot
                     // move there as it would be capturing a piece on its own side)
 
-                    if ((spaces[destRow][destCol].getCp() == null)
+                    if (spaces[destRow][destCol].getCp() != null && spaces[destRow][destCol].getCp().isKing()) {
+                        JOptionPane.showMessageDialog(null, "Cannot capture king");
+                    } else {
+                        if ((spaces[destRow][destCol].getCp() == null)
                                 || (spaces[destRow][destCol].getCp() != null
                                         && !spaces[destRow][destCol].getCp().sameSide(thisCp))) {
 
+                            if (spaces[destRow][destCol].getCp() != null) {
+                                lastPieceCaptured = spaces[destRow][destCol].getCp();
+                            } else {
+                                lastPieceCaptured = null;
+                            }
+
                             spaces[destRow][destCol].setCp(thisCp);
                             spaces[sourceRow][sourceCol].removeCp();
+                            
 
                             if (whiteToMove) {
                                 whiteToMove = true;
@@ -814,6 +826,25 @@ public class Board extends JComponent implements MouseListener {
 
                         // Switch turns between players
                         switchTurns();
+
+                        // Update the blackPieces and whitePieces lists
+                        updateChessPieces();
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
+        * Update the white and black chess piece lists (this is necessary since the board's state is constantly changing as pieces are moved and captured)
+    */
+    public void updateChessPieces() {
+        for (int row = 0; row < spaces.length; row++) {
+            for (int col = 0; col < spaces[0].length; col++) {
+                if (spaces[row][col].getCp() != null && spaces[row][col].getCp().isBlack()) {
+                    blackPieces.add(spaces[row][col].getCp());
+                } else if (spaces[row][col].getCp() != null && spaces[row][col].getCp().isWhite()) {
+                    whitePieces.add(spaces[row][col].getCp());
                 }
             }
         }
@@ -834,40 +865,71 @@ public class Board extends JComponent implements MouseListener {
 
     /**
      * This method checks whether a piece is causing check on the King of the opposing side
-     * @param sourceF the source file or source column of the piece
-     * @param sourceR the source rank or source row of the piece
      */
-    public void isCausingCheck(char sourceF, int sourceR) {
+    public void isCausingCheck() {
         // If another piece's moves contain either the white king or black king pos, and
         // that piece is on the opposite
         // side of the king being checked, then that would be considered check
-        ChessPiece aCp = spaces[8 - sourceR][(int) sourceF - 'A'].getCp();
+        
+        // Essentially our check algorithm is as follows: loop through the opposing side's pieces and search for a piece that contains the king's position
+        // If there is such a piece, then the king is in check
+        
+        // NOTE: We weren't able to figure out an effective algorithm for checkmate, but our game does implicitly record checkmate.
+        // When the player is unable to resolve any check, then that would be considered checkmate.
 
-        if (aCp != null && !aCp.isKing()) {
-            if (aCp.isBlack()) {
-                if (getValidMoves(8 - sourceR, (int) sourceF - 'A', aCp).contains(whiteKingPos)) {
-                    whiteInCheck = true;
-                    JOptionPane.showMessageDialog(null, "White in check");
-                } else {
-                    whiteInCheck = false;
-                }
-            } else if (aCp.isWhite()) {
-                if (getValidMoves(8 - sourceR, (int) sourceF - 'A', aCp).contains(blackKingPos)) {
-                    blackInCheck = true;
-                    JOptionPane.showMessageDialog(null, "Black in check");
-                } else {
-                    blackInCheck = false;
-                }
+        for (ChessPiece whitePiece : whitePieces) {
+            if (!whitePiece.isKing() &&
+                getValidMoves(8 - whitePiece.getRank(), (int) whitePiece.getFile() - 'A', whitePiece).contains(blackKingPos)
+            ) {
+                blackInCheck = true;
+                JOptionPane.showMessageDialog(null, "Black in check");
+                break;
+            } else {
+                blackInCheck = false;
+            }
+        }
+
+        for (ChessPiece blackPiece : blackPieces) {
+            if (!blackPiece.isKing() &&
+                getValidMoves(8 - blackPiece.getRank(), (int) blackPiece.getFile() - 'A', blackPiece).contains(whiteKingPos)
+            ) {
+                whiteInCheck = true;
+                JOptionPane.showMessageDialog(null, "White in check");
+                break;
+            } else {
+                whiteInCheck = false;
+            }
+        }
+    }
+    
+    /**
+        * Get the current positions of the white and black king to determine check
+    */
+    public void getKingPositions() {
+        if (spaces[8 - sourceRank][(int) sourceFile - 'A'].getCp() != null &&
+            spaces[8 - sourceRank][(int) sourceFile - 'A'].getCp().isKing()) {
+            if (spaces[8 - sourceRank][(int) sourceFile - 'A'].getCp().isWhite()) {
+                whiteKingPos = "" + destFile + destRank;
+            } else if (spaces[8 - sourceRank][(int) sourceFile - 'A'].getCp().isBlack()) {
+                blackKingPos = "" + destFile + destRank;
             }
         }
     }
 
     /**
      * This method allows for the move of a piece to be undone.
+     * Precondition: The space at [8 - destRank, (int) destFile - 'A'] has a chess piece
      */
     public void undoMove() {
-        spaces[8 - sourceRank][(int) sourceFile - 'A'].setCp(spaces[8 - destRank][(int) destFile - 'A'].getCp());
-        spaces[8 - destRank][(int) destFile - 'A'].removeCp();
+        // This method is used to prevent the player from making a move that would either put them in check or leave an existing check unresolved
+        
+        if (lastPieceCaptured == null) {
+            spaces[8 - sourceRank][(int) sourceFile - 'A'].setCp(spaces[8 - destRank][(int) destFile - 'A'].getCp());
+            spaces[8 - destRank][(int) destFile - 'A'].removeCp();
+        } else {
+            spaces[8 - sourceRank][(int) sourceFile - 'A'].setCp(spaces[8 - destRank][(int) destFile - 'A'].getCp());
+            spaces[8 - destRank][(int) destFile - 'A'].setCp(lastPieceCaptured);
+        }
 
         repaint();
     }
@@ -890,87 +952,96 @@ public class Board extends JComponent implements MouseListener {
             destFile = (char) ((int) 'A' + evt.getX() / 50);
             destRank = 8 - evt.getY() / 50;
 
-            if (spaces[8 - sourceRank][(int) sourceFile - 'A'].getCp() != null &&
-                    spaces[8 - sourceRank][(int) sourceFile - 'A'].getCp().isKing()) {
-                if (spaces[8 - sourceRank][(int) sourceFile - 'A'].getCp().isWhite()) {
-                    whiteKingPos = "" + destFile + destRank;
-                } else if (spaces[8 - sourceRank][(int) sourceFile - 'A'].getCp().isBlack()) {
-                    blackKingPos = "" + destFile + destRank;
-                }
-            }
+            getKingPositions();
 
             if (whiteInCheck || blackInCheck) {
                 if (whiteInCheck) {
-                    char wCheckingPieceFile = whiteCheckingPiecePos.charAt(0);
-                    int wCheckingPieceRank = Integer.parseInt(whiteCheckingPiecePos, 1, 2, 10);
-
                     movePiece();
 
-                    if (spaces[8 - wCheckingPieceRank][(int) wCheckingPieceFile - 'A'].getCp().isWhite()) {
+                    if (
+                        spaces[8 - Integer.parseInt(whiteCheckingPiecePos, 1, 2, 10)][(int) whiteCheckingPiecePos.charAt(0) - 'A'].getCp() != null &&
+                        spaces[8 - Integer.parseInt(whiteCheckingPiecePos, 1, 2, 10)][(int) whiteCheckingPiecePos.charAt(0) - 'A'].getCp().isWhite()
+                        && !spaces[8 - Integer.parseInt(blackCheckingPiecePos, 1, 2, 10)][(int) blackCheckingPiecePos.charAt(0) - 'A'].getCp().isKing()
+                    ) {
                         whiteInCheck = false;
-
-                        whiteToMove = false;
-                        blackToMove = true;
-                    }
-
-                    isCausingCheck(wCheckingPieceFile, wCheckingPieceRank);
-
-                    if (blackInCheck) {
-                        undoMove();
-                        JOptionPane.showMessageDialog(null, "White still in check");
-
-                        whiteToMove = true;
-                        blackToMove = false;
                     } else {
-                        whiteToMove = false;
-                        blackToMove = true;
+                        isCausingCheck();
+
+                        if (whiteInCheck) {
+                            undoMove();
+                            JOptionPane.showMessageDialog(null, "White still in check");
+
+                            blackToMove = false;
+                            whiteToMove = true;
+                        } else {
+                            whiteToMove = false;
+                            blackToMove = true;
+                        }
                     }
                 }
 
                 if (blackInCheck) {
-                    char bCheckingPieceFile = blackCheckingPiecePos.charAt(0);
-                    int bCheckingPieceRank = Integer.parseInt(blackCheckingPiecePos, 1, 2, 10);
-
                     movePiece();
 
-                    if (spaces[8 - bCheckingPieceRank][(int) bCheckingPieceFile - 'A'].getCp().isBlack()) {
+                    if (
+                        spaces[8 - Integer.parseInt(blackCheckingPiecePos, 1, 2, 10)][(int) blackCheckingPiecePos.charAt(0) - 'A'].getCp() != null &&
+                        spaces[8 - Integer.parseInt(blackCheckingPiecePos, 1, 2, 10)][(int) blackCheckingPiecePos.charAt(0) - 'A'].getCp().isBlack()
+                        && !spaces[8 - Integer.parseInt(blackCheckingPiecePos, 1, 2, 10)][(int) blackCheckingPiecePos.charAt(0) - 'A'].getCp().isKing()
+                    ) {
                         blackInCheck = false;
-
-                        whiteToMove = true;
-                        blackToMove = false;
-                    }
-
-                    isCausingCheck(bCheckingPieceFile, bCheckingPieceRank);
-
-                    if (blackInCheck) {
-                        undoMove();
-                        JOptionPane.showMessageDialog(null, "Black still in check");
-
-                        whiteToMove = false;
-                        blackToMove = true;
                     } else {
-                        whiteToMove = true;
-                        blackToMove = false;
+                        isCausingCheck();
+
+                        if (blackInCheck) {
+                            undoMove();
+                            JOptionPane.showMessageDialog(null, "Black still in check");
+
+                            blackToMove = true;
+                            whiteToMove = false;
+                        } else {
+                            whiteToMove = true;
+                            blackToMove = false;
+                        }
                     }
                 }
             } else {
                 movePiece();
-                isCausingCheck(destFile, destRank);
+                isCausingCheck();
+
+                if (spaces[8 - destRank][(int) destFile - 'A'].getCp() != null &&
+                    spaces[8 - destRank][(int) destFile - 'A'].getCp().isBlack() && blackInCheck) {
+                    JOptionPane.showMessageDialog(null, "Black, you cannot put yourself in check");
+                    undoMove();
+
+                    blackToMove = true;
+                    whiteToMove = false;
+                }
+
+                if (spaces[8 - destRank][(int) destFile - 'A'].getCp() != null &&
+                    spaces[8 - destRank][(int) destFile - 'A'].getCp().isWhite() && whiteInCheck) {
+                    JOptionPane.showMessageDialog(null, "White, you cannot put yourself in check");
+                    undoMove();
+
+                    blackToMove = true;
+                    whiteToMove = false;
+                }
 
                 if (blackInCheck) {
                     blackCheckingPiecePos = ""+destFile + destRank;
                 }
-                
+
                 if (whiteInCheck) {
                     whiteCheckingPiecePos = ""+destFile + destRank;
                 }
             }
         } else if (numClicks % 3 == 0) {
             // If the number of clicks is divisible by three, then reset the click count to
-            // 0 (so that the user can make a second move)
+            // 0 (so that the user can redo their move after making a mistake)
             numClicks = 0;
         }
     }
+    
+    // These must be added to any class that implements mouse listener (we didn't need them)
 
     public void mouseClicked(MouseEvent evt) {
     }
