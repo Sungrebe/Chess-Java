@@ -52,8 +52,6 @@ public class Board extends JComponent implements MouseListener {
 
         whiteKingPos = "E1"; 
         blackKingPos = "E8";
-        
-        // Initialize the board with all the chess pieces and blank spaces
 
         spaces[0][0] = new Space(0, 0, new Rook('A', 8, "black"));
         spaces[0][1] = new Space(0, 1, new Knight('B', 8, "black"));
