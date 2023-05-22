@@ -71,41 +71,20 @@ public class Board extends JComponent implements MouseListener {
         spaces[1][6] = new Space(1, 6, new Pawn('G', 7, "black"));
         spaces[1][7] = new Space(1, 7, new Pawn('H', 7, "black"));
 
-        spaces[2][0] = new Space(2, 0, null);
-        spaces[2][1] = new Space(2, 1, null);
-        spaces[2][2] = new Space(2, 2, null);
-        spaces[2][3] = new Space(2, 3, null);
-        spaces[2][4] = new Space(2, 4, null);
-        spaces[2][5] = new Space(2, 5, null);
-        spaces[2][6] = new Space(2, 6, null);
-        spaces[2][7] = new Space(2, 7, null);
+        for (int i = 0; i < 8; i++) {
+            spaces[2][i] = new Space(2, i, null);
+        }
+        
+        for (int i = 0; i < 8; i++) {
+            spaces[3][i] = new Space(3, i, null);
+        }
 
-        spaces[3][0] = new Space(3, 0, null);
-        spaces[3][1] = new Space(3, 1, null);
-        spaces[3][2] = new Space(3, 2, null);
-        spaces[3][3] = new Space(3, 3, null);
-        spaces[3][4] = new Space(3, 4, null);
-        spaces[3][5] = new Space(3, 5, null);
-        spaces[3][6] = new Space(3, 6, null);
-        spaces[3][7] = new Space(3, 7, null);
+        for (int i = 0; i < 8; i++) {
+            spaces[4][i] = new Space(4, i, null);
+        }
 
-        spaces[4][0] = new Space(4, 0, null);
-        spaces[4][1] = new Space(4, 1, null);
-        spaces[4][2] = new Space(4, 2, null);
-        spaces[4][3] = new Space(4, 3, null);
-        spaces[4][4] = new Space(4, 4, null);
-        spaces[4][5] = new Space(4, 5, null);
-        spaces[4][6] = new Space(4, 6, null);
-        spaces[4][7] = new Space(4, 7, null);
-
-        spaces[5][0] = new Space(5, 0, null);
-        spaces[5][1] = new Space(5, 1, null);
-        spaces[5][2] = new Space(5, 2, null);
-        spaces[5][3] = new Space(5, 3, null);
-        spaces[5][4] = new Space(5, 4, null);
-        spaces[5][5] = new Space(5, 5, null);
-        spaces[5][6] = new Space(5, 6, null);
-        spaces[5][7] = new Space(5, 7, null);
+        for (int i = 0; i < 8; i++) {
+            spaces[5][i] = new Space(5, i, null);
 
         spaces[6][0] = new Space(6, 0, new Pawn('A', 2, "white"));
         spaces[6][1] = new Space(6, 1, new Pawn('B', 2, "white"));
